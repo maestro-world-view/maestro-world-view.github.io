@@ -1,0 +1,469 @@
+<title>User Login | eChinacities.com</title>
+
+<meta property="og:url"
+      content="https://www.echinacities.com/login"/>
+
+<meta property="og:image" content="https://jobs.echinacities.com/static/echina/img/echinacities800.jpg"/>
+<meta property="og:title" content="User Login | eChinacities.com"/>
+<meta property="og:description"
+      content="eChinacities Personal Login--Users can login to our site, find work, answers to all kinds of China-related questions, and much more. From here they can access all of our various platforms."/>
+
+
+<meta name="description"
+      content="eChinacities Personal Login--Users can login to our site, find work, answers to all kinds of China-related questions, and much more. From here they can access all of our various platforms."/>
+<meta name="keywords" content="User Login"/>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="//static.echinacities.com/favicon.ico">
+<script type="text/javascript" async="" defer="" src="//www.google-analytics.com/ga.js"></script>
+<script src="//static.echinacities.com/static/lib/jquery-3.2.1.min.js"></script>
+<script src="//static.echinacities.com/static/lib/jquery.tap.js"></script>
+<script src="//static.echinacities.com/static/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="//static.echinacities.com/static/lib/vue.min.js"></script>
+<script src="//jobs.echinacities.com/static/js/global.js?86"></script>
+<script src="/static/echina/js/common.js?86"></script>
+<link href="/static/lib/bootstrap/css/bootstrap.min.css?83" rel="stylesheet">
+<link href="/static/echina/css/font-awesome.min.css?83" rel="stylesheet">
+<link href="/static/echina/css/company/login_register.css?83" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script>
+        function setLastVisited() {
+        var tval = '1790158680|' + location.href;
+        if ('visible' == document.visibilityState && tval != getCookie('lastVisited')) {
+            setCookieNew('lastVisited', tval, 's60')
+        }
+    }
+
+    $(function () {
+
+        $(document).bind('mousemove', setLastVisited)
+        $(document).bind('click', setLastVisited)
+        $(document).bind('resize', setLastVisited)
+        $(document).bind('scroll', setLastVisited)
+        $(document).bind('visibilitychange', setLastVisited)
+
+    })
+
+</script>
+<link href="/static/echina/css/index/logRegPer.css?83" rel="stylesheet"/>
+<!-- 个人登录注册 -->
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-7 col-md-5 col-lg-4 perLoginWrap">
+                <header class="logHeader">
+                                            <a href="//jobs.echinacities.com" class="loginLogo"><img
+                                    src="/static/echina/img/ecc_logo.png" alt="eChinacities"></a>
+                    
+                </header>
+                <section class="perLoginBox">
+                    <ul class="nav nav-tabs js-login-chose-type">
+                        <li data-id="0" class="perLoginTit active">
+                            <a href="javascript:;"
+                               data-toggle="tab">User Login</a>
+                        </li>
+                        <li data-id="1" class="perLoginTit active"><a href="javascript:;" data-toggle="tab">Email
+                                Login</a></li>
+                    </ul>
+
+                    <div class="login-form">
+                        <form>
+                            <div class="form-group usernameitems">
+                                <label class="labelt">Username: </label>
+                                <input type="text" class="form-control" name="username" placeholder="">
+                                <p class="color-red username_error"></p>
+                            </div>
+                            <div class="form-group usernameitems">
+                                <label class="labelt">Password: </label>
+                                <input type="password" name="pw" class="form-control" placeholder="">
+                                <p class="color-red usererrormsg"></p>
+                            </div>
+
+
+                            <div class="form-group emailitems" style="display: none;">
+                                <label class="labelt">Email address: </label>
+                                <input type="text" class="form-control" name="email" placeholder="">
+                                <p class="color-red forget_mail_error"></p>
+                            </div>
+                            <div class="form-group check_group scode-group emailitems">
+                                <label class="center-block labelt">Authentication code: </label>
+                                <div class="row">
+                                    <div class="col-xs-6" style="padding-right: 0;">
+                                        <input type="text" maxlength="4"
+                                               class="form-control forget_code reload-scode"
+                                               placeholder=""></div>
+                                    <div class="col-xs-6" style="padding-left: 0;">
+                                        <button style="color: #18b; background: #18b1; border: 1px solid #ccc; border-left: 0;"
+                                                class="btn btn-ecc btn-ecc-empty btn-block send_email_btn"
+                                                type="button">
+                                            Obtain code
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="color-red forget_code_error"></p>
+                            </div>
+
+
+                            <div class="form-group">
+                                <button type="button" id="baidu_shijian_1" class="btn btn-block perBtn">Login <i
+                                            class="fa fa-spinner fa-pulse" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="form-group checkbox marg-8">
+                                <label>
+                                    <input type="checkbox" checked="" name="rememberme"> Remember me
+                                </label>
+                                <div class="forgetpass"><a href="/forget_pwd?f=1">Forgot
+                                        password?</a></div>
+                            </div>
+                        </form>
+
+                                                                            <div class="form-divider"><span>Or login with</span></div>
+                            <div class="third-loginnew">
+                                <a href="javascript:;"
+                                   data-type="1"
+                                   class="login-buttonnew thridloginBtn login-facebook"><i
+                                            class="fa fa-facebook"></i><span>Facebook</span></a>
+                                <a href="javascript:;"
+                                   data-type="2"
+                                   class="login-buttonnew thridloginBtn login-linkedin"><i
+                                            class="fa fa-linkedin"></i><span>LinkedIn</span></a>
+                                <a href="javascript:;"
+                                   data-type="5"
+                                   class="login-buttonnew thridloginBtn login-google"><i
+                                            class="fa fa-google"></i><span>Google</span></a>
+                                <a href="javascript:;"
+                                   data-type="4"
+                                   class="login-buttonnew thridloginBtn login-wechat hidden-xs"><i
+                                            class="fa fa-wechat"></i><span>WeChat</span></a>
+<!--                                <a href="javascript:;"-->
+<!--                                   class="login-appmobile"><span>手机app</span></a>-->
+                            </div>
+                                                <div class="loginleftb">Not a member yet? <b><a id="baidu_shijian_user_register"
+                                                                        href="/register?type=1&url=%2F%2Fprofile.echinacities.com%2Fuser%2Fcenter%2Fresume">Register
+                                    now !</a></b> <a class="pull-right"
+                                                     href="//jobs.echinacities.com/index.php/main/contact/contact_us/customer_service/Personal?lang=en">Feedback</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.login-appmobile').bind('tap', function () {
+            location.href = '//jobs.echinacities.com/mobile_app/login/qrcode?state=user_login&lang=en&redirect_uri=' + encodeURI('http://jobs.echinacities.com/user/center');
+        });
+        $('.thridloginBtn').bind('tap', function () {
+            var typeId = parseInt($(this).attr('data-type'));
+            jPost('/api/v1/scan/saveData', {
+                type: 'user_login',
+                lang: "en",
+                url: "%2F%2Fprofile.echinacities.com%2Fuser%2Fcenter%2Fresume",
+                typeId: typeId,
+            }, function (res) {
+                // console.log("res", res)
+                jPost('https://www.echinacities.com/api/v1/scan/url', {
+                    type: res.data.type,
+                    state: res.data.state,
+                }, function (res1) {
+                    console.log("res1", res1)
+                    if (res1.code == 200) {
+                        location.href = res1.data.url;
+                    }
+                })
+            })
+            return false;
+        })
+    </script>
+
+    <!-- login modal -->
+</main>
+<!-- /个人登录注册 -->
+<!--<div class="modal-backdrop in"></div>-->
+<div class="modal fade in" id="lockModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog locktip" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <div class="large-text">
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                    <span>Your account has been suspended.</span>
+                </div>
+                <div>
+                    Please contact us at
+                    <a href="mailto:cs@echinacities.com">cs@echinacities.com</a>
+                    if you need help on your suspended account.
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    function showItems(val) {
+        $('.usernameitems').hide();
+        $('.emailitems').hide();
+        $('.nav-tabs li').removeClass('active');
+        $('.nav-tabs li[data-id="' + val + '"]').addClass('active');
+        if (val == 0) {
+            $('.usernameitems').show();
+        } else if (val == 1) {
+            $('.emailitems').show();
+        }
+    }
+
+    showItems(0);
+
+    $('.nav-tabs li').bind('click', function () {
+        var id = $(this).attr('data-id');
+        showItems(id);
+    })
+
+    function check_username() {
+        var val = $.trim($('input[name="username"]').val());
+        $('.username_error').text('');
+        if (val.length == 0) {
+            $('.username_error').text('This field is required')
+            return false;
+        }
+        return true;
+    }
+
+    $('input[name="username"]').bind('blur', function () {
+        check_username()
+    });
+    $('input[name="username"]').bind('keyup', function () {
+        check_username()
+    });
+
+    function check_code() {
+        var val = $.trim($('.forget_code').val());
+        $('.forget_code_error').text('');
+        if (val.length == 0) {
+            $('.forget_code_error').text('Please enter security code');
+            return false;
+        }
+        return true;
+    }
+
+
+    $(document).on('keyup', '.forget_code', function () {
+        check_code();
+    });
+    $(document).on('blur', '.forget_code', function () {
+        check_code();
+    });
+
+    function check_password() {
+        var val = $.trim($('input[name="pw"]').val());
+        $('.usererrormsg').text('');
+        if (val.length == 0) {
+            $('.usererrormsg').text('This field is required')
+            return false;
+        }
+        return true;
+    }
+
+    $('input[name="pw"]').bind('blur', function () {
+        check_password()
+    });
+    $('input[name="pw"]').bind('keyup', function () {
+        check_password()
+    });
+
+    function check_email() {
+        var val = $.trim($('input[name="email"]').val());
+        $('.forget_mail_error').text('');
+        if (val.length == 0) {
+            $('.forget_mail_error').text('This field is required')
+            return false;
+        }
+        if (!REG.email.test(val)) {
+            $('.forget_mail_error').text('This field is required')
+            return false;
+        }
+        return true;
+    }
+
+    $(document).on('keyup', 'input[name="email"]', function () {
+        check_email();
+    });
+    $(document).on('blur', 'input[name="email"]', function () {
+        check_email();
+    });
+    var timer_update_email = null;
+
+    $('.send_email_btn').bind('click', function () {
+        if (!check_email()) {
+            return;
+        }
+        jPost('/api/v1/user/sendLoginEmail', {
+            email: $.trim($('input[name="email"]').val()),
+        }, function (res) {
+            console.log("rrr", res)
+            if (res.code == 200) {
+                var lock = 180;
+                $('.send_email_btn').text('180s');
+                $('.send_email_btn').prop('disabled', true);
+                timer_update_email = setInterval(function () {
+                    $('.send_email_btn').text((lock--) + 's');
+                    if (lock <= 0) {
+                        clearInterval(timer_update_email);
+                        $('.send_email_btn').text('Obtain code');
+                        $('.send_email_btn').prop('disabled', false);
+                    }
+                }, 1000)
+            } else if (res.reason == 'USER_IS_DENY_SITE') {
+                $('#lockModal').modal('show');
+            } else if (res.data == 'USER_NOT_FOUND') {
+                $('.forget_mail_error').text("The email address you provided does not match any accounts on record. Please create a new account.");
+            }
+
+        }, function () {
+            clearInterval(timer_update_email);
+            $('.send_email_btn').text('Obtain code');
+            $('.send_email_btn').prop('disabled', false);
+        })
+
+    })
+
+    function onLoginSuccess(token) {
+        $.get('/utils/loginByToken?user=1&token=' + token + '&rememberme=' + $('input[name="rememberme"]:checked').length, function (res) {
+            if (res == 'success') {
+                location.reload();
+            }
+        });
+    };
+
+    function loginhandler() {
+
+        var type = $('.nav-tabs li.active').index();
+        var postData = {
+            username: $.trim($('input[name="username"]').val()),
+            password: $.trim($('input[name="pw"]').val()),
+            loginType: "username"
+        }
+        if (type == 1) {
+            postData = {
+                email: $.trim($('input[name="email"]').val()),
+                code: $.trim($('.forget_code').val()),
+                loginType: "emailCode"
+            }
+            if ((check_email() * check_code()) == 0) {
+                return;
+            }
+        } else {
+            if ((check_username() * check_password()) == 0) {
+                return;
+            }
+        }
+        jPost('/api/v1/user/login', postData, function (res) {
+            if (res.code == 200) {
+                onLoginSuccess(res.data.token)
+            } else if (res.reason == 'USER_IS_DENY_SITE') {
+                $('#lockModal').modal('show')
+            } else if (res.reason == 'LOGIN_VERIFY_BAD') {
+                $('.usererrormsg').text('Sorry, incorrect password.  Please try again.')
+            } else if (res.data == 'CODE_ERROR') {
+                $('.forget_code_error').html('Code error, please re-try.')
+            } else if (res.data == 'USER_NOT_FOUND') {
+                if (type == 0) {
+                    if (postData['username'].indexOf('@') != -1) {
+                        $('.username_error').text("The email address you provided does not match any accounts on record. Please create a new account.");
+                    } else {
+                        $('.username_error').text('The username you provided does not match any accounts on record. Please create a new account.')
+                    }
+                } else {
+                    $('.forget_mail_error').text("The email address you provided does not match any accounts on record. Please create a new account.");
+                }
+            }
+        })
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: "/site/ajax_login",
+        //     data: {
+        //         'username': $.trim($('input[name="username"]').val()),
+        //         'pw': $.trim($('input[name="pw"]').val()),
+        //         'rememberme': $('input[name="rememberme"]:checked').length
+        //     },
+        //     success: function (re) {
+        //         re = parseInt(re);
+        //         switch (re) {
+        //             //个人用户已登录
+        //             case 0:
+        //                 location.reload();
+        //                 break;
+        //             //禁整站
+        //             case 2:
+        //                 $('.usererrormsg').text("Your account has been blocked due to posts containing spam, advertising or inappropriate content.")
+        //                 break;
+        //             //登录成功
+        //             case 6:
+        //                 location.reload();
+        //                 break;
+        //             default:
+        //                 $('.usererrormsg').text('Sorry, invalid username or password. Please try again.')
+        //         }
+        //     }
+        // });
+    }
+
+    $('.perBtn').bind('tap', loginhandler);
+</script>
+
+
+<!--第三方微信登录入口弹出框结束 -->
+<script src="//res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+<script type="text/javascript">
+    //var stosadasd = null;
+    //var tmpopen = null;
+    //$('.login-wechat').click(function () {
+    //    tmpopen = window.open("//auth1.///redict/4/1?url=//", "_blank", "top=100,left=400,width=500,height=500,menubar=no,scrollbars=no,toolbar=yes,status=no");
+    //    clearInterval(stosadasd);
+    //    stosadasd = setInterval(function () {
+    //        if (getCookie('uName') != '') {
+    //            tmpopen.close()
+    //            clearInterval(stosadasd);
+    //            location.href = "//";
+    //
+    //        }
+    //    }, 1000);
+    //});
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+        function load_google() {
+            var _gaq = _gaq || [];
+
+            
+            _gaq.push(['_setAccount', 'UA-5050936-1']);
+            _gaq.push(['_setDomainName', 'echinacities.com']);
+            _gaq.push(['_trackPageview']);
+
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.defer = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : '//www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        }
+
+        function load_baidu() {
+            var _hmt = _hmt || [];
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?96e775c5e2e9c52158bba90e8ceecf7c";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        }
+
+        load_google()
+        load_baidu();
+    })
+</script>

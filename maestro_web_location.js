@@ -3,6 +3,7 @@ function boot(){
  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
  const country=$("#mw-country"),city=$("#mw-city"),section=$("#mw-section"),current=$("#mw-location-current");if(!country||!city)return;
  const aliases={"US":"United States","USA":"United States","U.S.":"United States","United States of America":"United States","UK":"United Kingdom","U.K.":"United Kingdom"};
+ const sectionPages={news:"news.html",sports:"sports.html",job:"job_offers.html",service:"services.html",real_estate:"real_estate.html",vehicle:"cars_motorcycles.html",art:"arts.html",dating:"dating.html"};
  const canon=v=>aliases[(v||"").trim()]||(v||"").trim();
  const cards=$$(".mw-story,.card,.dating-card").filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
@@ -31,7 +32,17 @@ function boot(){
   }
   if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replace("_"," ")].filter(Boolean).join(" · ")):"Showing all available areas";
  }
- $("#mw-apply-location")?.addEventListener("click",apply);$("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";apply()});
+ $("#mw-apply-location")?.addEventListener("click",()=>{
+   let c=canon(country.value),ct=city.value,sec=section.value;
+   localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
+   const isIndex=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
+   if(isIndex && sec && sectionPages[sec]){
+     window.open(sectionPages[sec],"_blank","noopener");
+     return;
+   }
+   apply();
+ });
+ $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";apply()});
  let sc=canon(localStorage.getItem("mw_web_country")||""),st=localStorage.getItem("mw_web_city")||"",ss=localStorage.getItem("mw_web_section")||"";if([...country.options].some(o=>o.value===sc)){country.value=sc;refill()}if([...city.options].some(o=>o.value===st))city.value=st;if([...section.options].some(o=>o.value===ss))section.value=ss;apply();
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
