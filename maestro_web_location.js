@@ -35,10 +35,15 @@ function boot(){
  $("#mw-apply-location")?.addEventListener("click",()=>{
    let c=canon(country.value),ct=city.value,sec=section.value;
    localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
-   const isIndex=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
-   if(isIndex && sec && sectionPages[sec]){
-     window.open(sectionPages[sec],"_blank","noopener");
-     return;
+   // On ANY Maestro page, choosing a specific section opens that dedicated
+   // section page in a new tab. This keeps navigation behavior consistent.
+   if(sec && sectionPages[sec]){
+     const target=sectionPages[sec];
+     const currentPage=(location.pathname.split("/").pop()||"index.html").toLowerCase();
+     if(currentPage!==target.toLowerCase()){
+       window.open(target,"_blank","noopener");
+       return;
+     }
    }
    apply();
  });
