@@ -15,7 +15,22 @@ function boot(){
  setopts(country,uniq(pairs.map(x=>x.country)),"All countries");
  function refill(){let c=canon(country.value);setopts(city,uniq(pairs.filter(x=>!c||x.country===c).map(x=>x.city)),"All cities / areas")};country.addEventListener("change",refill);refill();
  function type(x){let v=attr(x,"type")||attr(x,"category");if(v)return v.toLowerCase();let p=location.pathname.toLowerCase();if(p.includes("news"))return"news";if(p.includes("sports"))return"sports";if(p.includes("job"))return"job";if(p.includes("services"))return"service";if(p.includes("real_estate"))return"real_estate";if(p.includes("cars_motorcycles"))return"vehicle";if(p.includes("arts"))return"art";if(p.includes("dating"))return"dating";return""}
- function apply(){let c=canon(country.value),ct=city.value,sec=section.value;localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);cards.forEach(x=>{let xc=field(x,"country"),xt=field(x,"city"),typ=type(x);x.style.display=((!c||xc===c)&&(!ct||xt===ct)&&(!sec||typ===sec))?"":"none"});if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replace("_"," ")].filter(Boolean).join(" · ")):"Showing all available areas"}
+ function apply(){
+  let c=canon(country.value),ct=city.value,sec=section.value;
+  localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
+  cards.forEach(x=>{let xc=field(x,"country"),xt=field(x,"city"),typ=type(x);x.style.display=((!c||xc===c)&&(!ct||xt===ct)&&(!sec||typ===sec))?"":"none"});
+  const isIndex=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
+  if(isIndex){
+    $$(".mw-live-section[data-mw-section]").forEach(box=>{
+      const k=(box.dataset.mwSection||"").toLowerCase();
+      box.style.display=(!sec||k===sec)?"":"none";
+    });
+    $$(".mw-global-card,.stats").forEach(box=>box.style.display=sec?"none":"");
+    // Remove empty grid space when only one local section is selected.
+    $$(".mw-grid-live,.mw-global-grid").forEach(g=>{g.style.display=sec?"block":""});
+  }
+  if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replace("_"," ")].filter(Boolean).join(" · ")):"Showing all available areas";
+ }
  $("#mw-apply-location")?.addEventListener("click",apply);$("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";apply()});
  let sc=canon(localStorage.getItem("mw_web_country")||""),st=localStorage.getItem("mw_web_city")||"",ss=localStorage.getItem("mw_web_section")||"";if([...country.options].some(o=>o.value===sc)){country.value=sc;refill()}if([...city.options].some(o=>o.value===st))city.value=st;if([...section.options].some(o=>o.value===ss))section.value=ss;apply();
 }
