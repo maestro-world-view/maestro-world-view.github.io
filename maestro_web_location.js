@@ -28,7 +28,7 @@ function inferredType(x){
  if(path.includes("job")||head.includes("job"))return "job";
  if(path.includes("real_estate")||head.includes("real estate"))return "real_estate";
  if(path.includes("cars_motorcycles")||head.includes("motor"))return "vehicle";
- if(path.includes("arts")||head.includes("art"))return "art";
+ if(path.includes("arts")||head.includes("art"))return "art";\n if(path.includes("dating")||head.includes("dating"))return "dating";
  return "";
 }
 function apply(){
