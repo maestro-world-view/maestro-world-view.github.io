@@ -138,3 +138,28 @@ body{background:#000!important;color:#fff!important}
 @media(max-width:760px){
  .mw-story,.mw-top-item,.card,.mw-text-card{background:#0b0b0b!important}
 }
+
+/* === V15 MOBILE HOTFIX: INDEX 5-ITEM CAP + VISIBLE HOME === */
+@media(max-width:760px){
+ .mw-top-home{
+   display:inline-flex!important;
+   align-items:center!important;
+   justify-content:center!important;
+   min-height:38px!important;
+   padding:0 12px!important;
+   margin-left:auto!important;
+   border:1px solid #444!important;
+   border-radius:19px!important;
+   background:#111!important;
+   color:#fff!important;
+   text-decoration:none!important;
+   font-size:12px!important;
+   font-weight:800!important;
+   white-space:nowrap!important
+ }
+ /* Defensive display cap for an already-generated/stale Index until regeneration. */
+ .mw-stream>.mw-story:nth-child(n+6),
+ .mw-global-body>.mw-top-item:nth-child(n+6){
+   display:none!important
+ }
+}
