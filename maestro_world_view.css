@@ -1,0 +1,47 @@
+
+:root{--mw-bg:#06090f;--mw-panel:#0d1420;--mw-line:#233044;--mw-text:#f4f7fb;--mw-muted:#95a5ba;--mw-accent:#6bc7ff;--mw-live:#62e6a5}
+html{scroll-behavior:smooth}body{background:var(--mw-bg)!important;color:var(--mw-text)!important}
+.mw-brandbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 5%;background:#05070b;border-bottom:1px solid var(--mw-line);font-family:Arial,sans-serif}
+.mw-logo{font-weight:900;letter-spacing:3px}.mw-logo span{color:var(--mw-accent)}.mw-status{font-size:12px;color:var(--mw-live);letter-spacing:1px}
+.mw-credit{text-align:center;padding:22px;font:12px Arial,sans-serif;letter-spacing:2px;color:#78889d;border-top:1px solid var(--mw-line);margin-top:30px}
+.mw-credit strong{color:#d8e8f7}.mw-focus{font:12px Arial;color:#9fb0c5}
+
+.mw-filterbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;padding:14px;background:#0a111b;border:1px solid #24354b;border-radius:12px}
+.mw-filterbar strong{font:11px Arial;letter-spacing:1.5px;color:#77cfff;margin-right:4px}
+.mw-filterbar input,.mw-filterbar select,.mw-filterbar button{padding:10px 12px;border:1px solid #34465e;border-radius:8px;background:#111b29;color:#f4f7fb;font:13px Arial}
+.mw-filterbar input{min-width:260px;flex:1}.mw-filterbar button{cursor:pointer}.mw-count{font:12px Arial;color:#91a4bb;margin-left:auto}
+@media(max-width:650px){.mw-filterbar>*{width:100%!important}.mw-count{margin-left:0}}
+
+.mw-live-section{margin:26px 0;padding:22px;border:1px solid #26364b;border-radius:18px;background:#0b111b}
+.mw-live-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mw-live-head h2{margin:0;font-size:22px}.mw-live-head span{font-size:11px;color:#63e5a4}
+.mw-stream{height:560px;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;padding-right:6px}.mw-story{display:block;min-height:92px;padding:12px 14px;margin-bottom:8px;border-radius:12px;background:#101a28;border:1px solid #26364b}
+.mw-story .src{font-size:11px;color:#72caff}.mw-story h3{font-size:20px;margin:10px 0}.mw-story p{color:#aebbc9;line-height:1.45;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}.mw-story a{color:#8fd3ff;text-decoration:none;font-weight:700}.mw-grid-live{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}@media(max-width:850px){.mw-grid-live{grid-template-columns:1fr}}
+
+.mw-story h3{font-size:16px!important;margin:5px 0!important}.mw-story p{font-size:13px!important;line-height:1.35!important;-webkit-line-clamp:2!important;margin:5px 0!important}.mw-empty{padding:28px;color:#91a4bb;text-align:center;border:1px dashed #2a3a50;border-radius:12px}
+
+.mw-global-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 22px}
+.mw-global-card{min-width:0;background:#0b111b;border:1px solid #26364b;border-radius:18px;padding:18px}
+.mw-global-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.mw-global-head h2{margin:0;font-size:20px}.mw-global-head span{font-size:10px;letter-spacing:1px;color:#63e5a4}
+.mw-global-list{height:430px;overflow-y:auto;scroll-behavior:smooth;padding-right:5px}
+.mw-top-item{padding:11px 4px;border-bottom:1px solid #243247}
+.mw-top-meta{font-size:10px;color:#72caff;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.mw-top-item a{font-size:14px;line-height:1.35;color:#f4f7fb;text-decoration:none;font-weight:700}
+@media(max-width:760px){
+ .mw-global-grid,.mw-grid-live{grid-template-columns:1fr!important}
+ .mw-global-card,.mw-live-section{padding:14px!important;margin:14px 0!important}
+ .mw-global-list{height:390px}
+ .mw-stream{height:500px}
+ .mw-live-head,.mw-global-head{align-items:flex-start;flex-direction:column}
+ .mw-live-head h2,.mw-global-head h2{font-size:18px}
+ .mw-story{min-height:88px;padding:11px}
+ .mw-story h3{font-size:15px!important}
+ .mw-story p{font-size:12px!important}
+ .mw-brandbar{flex-wrap:wrap;padding:10px 14px}
+ .mw-logo{width:100%}
+}
+@media(max-width:420px){
+ .mw-global-list{height:360px}.mw-stream{height:470px}
+ .mw-top-item a{font-size:13px}
+}
