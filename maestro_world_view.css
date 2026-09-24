@@ -570,7 +570,7 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
 }
 \n/* =====================================================================\n   V17.2 FEED WIDTH + REMOTE WIDE FALLBACK HARD FIX\n   ===================================================================== */\n.mw-section-wrap{max-width:1400px!important;width:calc(100% - 48px)!important;margin-left:auto!important;margin-right:auto!important}\n.mw-featured,.mw-latest,.mw-top-stories{width:100%!important;max-width:none!important}\n.mw-featured .mw-news-hero,.mw-latest .mw-news-row,.mw-top-list .mw-news-hero,.mw-top-list .mw-news-row{\n width:100%!important;max-width:none!important;\n grid-template-columns:320px minmax(0,1fr)!important;\n column-gap:30px!important;box-sizing:border-box!important;\n}\n.mw-featured .mw-hero-copy,.mw-latest .mw-news-row-copy,.mw-top-list .mw-hero-copy,.mw-top-list .mw-news-row-copy{\n width:100%!important;max-width:none!important;min-width:0!important;\n justify-self:stretch!important;box-sizing:border-box!important;\n}\n.mw-featured .mw-hero-copy p,.mw-latest .mw-news-row-copy p,.mw-top-list .mw-hero-copy p,.mw-top-list .mw-news-row-copy p{\n width:100%!important;max-width:none!important;white-space:normal!important;\n -webkit-line-clamp:unset!important;overflow:visible!important;\n}\n.mw-feed-image[src="https://maestro-world-view.github.io/logo1.png"]{\n width:320px!important;height:216px!important;min-width:320px!important;max-width:320px!important;\n min-height:216px!important;max-height:216px!important;object-fit:cover!important;object-position:center!important;\n padding:0!important;background:#0d0f10!important;border-radius:12px!important;\n}\n@media(max-width:760px){\n .mw-section-wrap{width:calc(100% - 20px)!important}\n .mw-featured .mw-news-hero,.mw-latest .mw-news-row,.mw-top-list .mw-news-hero,.mw-top-list .mw-news-row{grid-template-columns:1fr!important}\n .mw-feed-image[src="https://maestro-world-view.github.io/logo1.png"]{width:100%!important;height:auto!important;min-width:0!important;max-width:100%!important;min-height:0!important;max-height:none!important;aspect-ratio:16/9!important}\n}\n
 /* =====================================================================
-   V18.2 DESKTOP FEED / FALLBACK IMAGE / TRENDING FINAL RESET
+   V18.3 DESKTOP FEED / FALLBACK IMAGE / TRENDING FINAL RESET
    ===================================================================== */
 .mw-trending{display:none!important}
 
@@ -628,11 +628,19 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  }
 }
 
-/* V18.2.1 SOURCE BADGE FIX */
+/* V18.3.1 SOURCE BADGE FIX */
 .mw-news-meta{display:flex!important;align-items:center!important;gap:8px!important}
 .mw-news-meta .mw-source-icon{
  width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important;
  min-height:22px!important;max-height:22px!important;object-fit:contain!important;
  border-radius:4px!important;background:transparent!important;padding:0!important;
  flex:0 0 22px!important;
+}
+
+/* V18.3 UNIVERSAL SOURCE ICON */
+.mw-source-icon{
+ width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important;
+ min-height:22px!important;max-height:22px!important;object-fit:contain!important;
+ border-radius:4px!important;background:transparent!important;padding:0!important;
+ vertical-align:middle!important;
 }
