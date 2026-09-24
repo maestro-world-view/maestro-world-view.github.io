@@ -13,7 +13,7 @@ function boot(){
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
- // V18.16: full DB-backed metadata, not the small preview-card set.
+ // V18.17: full DB-backed metadata, not the small preview-card set.
  const dbLocs=Array.isArray(window.MAESTRO_DB_LOCATIONS)?window.MAESTRO_DB_LOCATIONS:[];
  function pairs(){return dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}))}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
@@ -42,6 +42,10 @@ function boot(){
  }
  function apply(){
    let c=canon(country.value),ct=city.value,sec=section.value;
+   // Dedicated pages already define their section. A stale section preference must not hide their feed.
+   const page=(location.pathname.split("/").pop()||"index.html").toLowerCase();
+   const dedicatedKey=Object.entries(sectionPages).find(([k,v])=>v.toLowerCase()===page)?.[0]||"";
+   if(dedicatedKey)sec=dedicatedKey;
    localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
    let all=cards(),shown=0;
    all.forEach(x=>{let ok=wanted(x,c,ct,sec);x.hidden=!ok;x.style.setProperty("display",ok?"":"none","important");if(ok)shown++});
