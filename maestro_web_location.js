@@ -11,9 +11,9 @@ function boot(){
  const sectionPages={news:"news.html",sports:"sports.html",job:"job_offers.html",service:"services.html",real_estate:"real_estate.html",vehicle:"cars_motorcycles.html",art:"arts.html",dating:"dating.html",wellness:"wellness_longevity.html",science:"science.html",travel:"travel.html",politics:"politics.html",finance:"finance.html"};
  const canon=v=>aliases[(v||"").trim()]||(v||"").trim();
  const norm=v=>canon(v).normalize("NFKC").trim().toLocaleLowerCase();
- const cards=$$(".mw-story,.card,.dating-card").filter(x=>!x.closest(".mw-global-card"));
+ const cards=$$(".mw-story,.mw-news-hero,.mw-news-row,.mw-listing-row,.card,.dating-card").filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
- // V18.10 strict target filtering: use only collection metadata rendered into data-country/data-city.
+ // V18.11 strict target filtering: use only collection metadata rendered into data-country/data-city.
  const field=(x,k)=>{let a=attr(x,k);return k==="country"?canon(a):a};
  const uniq=a=>[...new Set(a.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
  const esc=v=>String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -49,7 +49,10 @@ function boot(){
     // Remove empty grid space when only one local section is selected.
     $$(".mw-grid-live,.mw-global-grid").forEach(g=>{g.style.display=sec?"block":""});
   }
-  if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replace("_"," ")].filter(Boolean).join(" · ")):"Showing all available areas";updateMyWorld();
+  if(current){
+    const visibleCount=cards.filter(x=>x.style.display!=="none").length;
+    current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replace("_"," ")].filter(Boolean).join(" · ")+" · "+visibleCount+" matching items"):("Showing all available areas · "+visibleCount+" items");
+  }updateMyWorld();
  }
  $("#mw-apply-location")?.addEventListener("click",()=>{
    let c=canon(country.value),ct=city.value,sec=section.value;
