@@ -13,13 +13,23 @@ function boot(){
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
- const catalog=(Array.isArray(window.MAESTRO_LOCATIONS)?window.MAESTRO_LOCATIONS:[]).map(x=>({country:canon(x.country),city:(x.city||"").trim()}));
- function pairs(){return [...catalog,...cards().map(x=>({country:field(x,"country"),city:field(x,"city")}))]}
+ // Dropdowns are derived from records actually rendered/collected on this page.
+ // Do not advertise configured target cities that have no stored records.
+ function pairs(){return cards().map(x=>({country:field(x,"country"),city:field(x,"city")}))}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
  setopts(country,uniq(pairs().map(x=>x.country)),"All countries");
  function refill(){let c=canon(country.value);setopts(city,uniq(pairs().filter(x=>!c||norm(x.country)===norm(c)).map(x=>x.city)),"All cities / areas")}
  function type(x){let v=attr(x,"type")||attr(x,"category");if(v)return v.toLowerCase();let p=location.pathname.toLowerCase();if(p.includes("news"))return"news";if(p.includes("sports"))return"sports";if(p.includes("job"))return"job";if(p.includes("services"))return"service";if(p.includes("real_estate"))return"real_estate";if(p.includes("cars_motorcycles"))return"vehicle";if(p.includes("arts"))return"art";if(p.includes("dating"))return"dating";if(p.includes("wellness"))return"wellness";if(p.includes("science"))return"science";if(p.includes("travel"))return"travel";if(p.includes("politics"))return"politics";if(p.includes("finance"))return"finance";return""}
  function wanted(x,c,ct,sec){return (!c||norm(field(x,"country"))===norm(c))&&(!ct||norm(field(x,"city"))===norm(ct))&&(!sec||type(x)===sec)}
+
+ function updateDashboard(c,ct){
+   const all=cards();
+   const geo=x=>(!c||norm(field(x,"country"))===norm(c))&&(!ct||norm(field(x,"city"))===norm(ct));
+   const counts={news:0,sports:0,job:0,service:0,real_estate:0,vehicle:0,art:0,wellness:0,science:0,travel:0,politics:0,finance:0};
+   all.forEach(x=>{if(!geo(x))return;let t=type(x);if(Object.prototype.hasOwnProperty.call(counts,t))counts[t]++});
+   const map={"News":"news","Sports":"sports","Jobs":"job","Services":"service","Real Estate":"real_estate","Motors":"vehicle","Arts":"art","Wellness":"wellness","Science":"science","Travel":"travel","Politics":"politics","Finance":"finance"};
+   $$(".stats .stat").forEach(box=>{let label=(box.querySelector("span")?.textContent||"").trim(),key=map[label];if(key&&Object.prototype.hasOwnProperty.call(counts,key)){let b=box.querySelector("b");if(b)b.textContent=counts[key]}});
+ }
  function apply(){
    let c=canon(country.value),ct=city.value,sec=section.value;
    localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
@@ -29,6 +39,7 @@ function boot(){
    if((c||ct)&&!shown){let host=$(".mw-section-wrap,.wrap,main")||document.body,e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.prepend(e)}
    const isIndex=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
    if(isIndex){$$(".mw-live-section[data-mw-section]").forEach(box=>{let k=(box.dataset.mwSection||"").toLowerCase();box.hidden=!!sec&&k!==sec;box.style.setProperty("display",(!sec||k===sec)?"":"none","important")})}
+   updateDashboard(c,ct);
    if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")+" · "+shown+" matching items"):("Showing all available areas · "+shown+" items");
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
