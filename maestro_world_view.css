@@ -422,3 +422,111 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  .mw-bottom-dashboard .stat{min-height:116px!important}
  .mw-trending{overflow-x:auto!important;white-space:nowrap!important}
 }
+
+/* === V16.8 PROFESSIONAL SAME-PAGE TRENDING PILLS === */
+.mw-trending .mw-trend-link,
+.mw-trending a.mw-trend-link,
+.mw-trending button.mw-trend-link{
+ appearance:none!important;-webkit-appearance:none!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ color:#f4f7fa!important;background:#191d21!important;
+ border:1px solid #414850!important;border-radius:999px!important;
+ padding:8px 14px!important;margin:0 3px!important;
+ font:700 14px/1 Arial,"Segoe UI",sans-serif!important;
+ text-decoration:none!important;cursor:pointer!important;box-shadow:none!important;
+}
+.mw-trending .mw-trend-link:link,
+.mw-trending .mw-trend-link:visited{color:#f4f7fa!important;text-decoration:none!important}
+.mw-trending .mw-trend-link:hover,
+.mw-trending .mw-trend-link:focus{
+ color:#fff!important;background:#2a3036!important;border-color:#727c86!important;outline:none!important;
+}
+.mw-trending .mw-trend-link.active{
+ color:#101214!important;background:#fff!important;border-color:#fff!important;
+}
+
+/* =====================================================================
+   V16.9 IMAGE GEOMETRY HARD RESET
+   Restores the compact Arts/Google-News-like feed card dimensions.
+   This block intentionally comes LAST so older V16 experimental rules cannot enlarge images.
+   ===================================================================== */
+.wrap{max-width:1400px!important;margin:0 auto!important}
+.mw-news-hero,.mw-news-row,.mw-listing-row,.card{
+ display:grid!important;
+ grid-template-columns:320px minmax(0,1fr)!important;
+ gap:26px!important;
+ align-items:start!important;
+ padding:20px 24px!important;
+ margin:0!important;
+ width:100%!important;
+ max-width:none!important;
+ box-sizing:border-box!important;
+ overflow:hidden!important;
+ background:#0d0f10!important;
+}
+.mw-news-hero>.mw-feed-image,
+.mw-news-row>.mw-feed-image,
+.mw-listing-row>.mw-feed-image,
+.card>.mw-feed-image{
+ display:block!important;
+ grid-column:1!important;grid-row:1!important;
+ width:320px!important;height:216px!important;
+ min-width:320px!important;max-width:320px!important;
+ min-height:216px!important;max-height:216px!important;
+ aspect-ratio:auto!important;
+ object-fit:cover!important;
+ object-position:center!important;
+ border-radius:12px!important;
+ margin:0!important;padding:0!important;
+ position:static!important;
+ inset:auto!important;
+ transform:none!important;
+}
+.mw-news-hero>.mw-hero-copy,
+.mw-news-row>.mw-news-row-copy,
+.mw-listing-row>.mw-listing-copy,
+.card>div{
+ grid-column:2!important;grid-row:1!important;
+ position:static!important;
+ min-width:0!important;
+ color:#f4f6f8!important;
+}
+.mw-news-hero h2,.mw-news-row h3,.mw-listing-row h3,.card h2{
+ margin:5px 0 8px!important;
+ font:700 20px/1.28 Arial,"Segoe UI",sans-serif!important;
+ color:#fff!important;
+}
+.mw-news-hero p,.mw-news-row p,.mw-listing-row p,.card .desc{
+ margin:0 0 10px!important;
+ font:400 15px/1.45 Arial,"Segoe UI",sans-serif!important;
+ color:#c8ccd0!important;
+}
+@media(max-width:760px){
+ .mw-news-hero,.mw-news-row,.mw-listing-row,.card{
+   grid-template-columns:1fr!important;
+   gap:12px!important;padding:14px!important;
+ }
+ .mw-news-hero>.mw-feed-image,
+ .mw-news-row>.mw-feed-image,
+ .mw-listing-row>.mw-feed-image,
+ .card>.mw-feed-image{
+   grid-column:1!important;grid-row:1!important;
+   width:100%!important;height:auto!important;
+   min-width:0!important;max-width:100%!important;
+   min-height:0!important;max-height:none!important;
+   aspect-ratio:16/9!important;
+   object-fit:cover!important;
+ }
+ .mw-news-hero>.mw-hero-copy,
+ .mw-news-row>.mw-news-row-copy,
+ .mw-listing-row>.mw-listing-copy,
+ .card>div{
+   grid-column:1!important;grid-row:2!important;
+ }
+ .mw-news-hero h2,.mw-news-row h3,.mw-listing-row h3,.card h2{
+   font-size:18px!important;
+ }
+ .mw-news-hero p,.mw-news-row p,.mw-listing-row p,.card .desc{
+   font-size:14px!important;
+ }
+}
