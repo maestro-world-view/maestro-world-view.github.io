@@ -164,8 +164,6 @@ body{background:#000!important;color:#fff!important}
  }
 }
 
-/* === V15 VIEW MORE === */
+/* === V15 VIEW MORE LAYOUT === */
 .mw-view-more-wrap{padding:12px 14px 16px;border-top:1px solid #2b2b2b}
-.mw-view-more{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 18px;border:1px solid #4a4a4a;border-radius:20px;background:#111;color:#8ab4f8!important;text-decoration:none!important;font-weight:800;font-size:13px}
-.mw-view-more:hover{background:#1c1c1c}
-@media(max-width:760px){.mw-view-more{width:100%;box-sizing:border-box}}
+@media(max-width:760px){.mw-view-more-wrap>a{width:100%;box-sizing:border-box;text-align:center}}
