@@ -530,3 +530,23 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
    font-size:14px!important;
  }
 }
+
+/* =====================================================================
+   V17 ARTICLE FALLBACK IMAGE
+   Real article images remain cover-cropped. Maestro fallback stays inside
+   the exact same 320x216 / mobile 16:9 rectangle without distortion.
+   ===================================================================== */
+.mw-feed-image[src="logo.png"]{
+ object-fit:contain!important;
+ background:#101820!important;
+ padding:20px!important;
+ box-sizing:border-box!important;
+}
+@media(max-width:760px){
+ .mw-feed-image[src="logo.png"]{
+   width:100%!important;
+   aspect-ratio:16/9!important;
+   object-fit:contain!important;
+   padding:18px!important;
+ }
+}
