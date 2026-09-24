@@ -550,3 +550,21 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
    padding:18px!important;
  }
 }
+
+/* V17.1 wide Maestro fallback: logo1.png is already a landscape banner. */
+.mw-feed-image[src="logo1.png"]{
+ width:320px!important;height:216px!important;
+ min-width:320px!important;max-width:320px!important;
+ min-height:216px!important;max-height:216px!important;
+ object-fit:cover!important;object-position:center!important;
+ padding:0!important;background:#0d0f10!important;
+ box-sizing:border-box!important;
+}
+@media(max-width:760px){
+ .mw-feed-image[src="logo1.png"]{
+   width:100%!important;height:auto!important;
+   min-width:0!important;max-width:100%!important;
+   min-height:0!important;max-height:none!important;
+   aspect-ratio:16/9!important;object-fit:cover!important;padding:0!important;
+ }
+}
