@@ -13,9 +13,9 @@ function boot(){
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
- // Dropdowns are derived from records actually rendered/collected on this page.
- // Do not advertise configured target cities that have no stored records.
- function pairs(){return cards().map(x=>({country:field(x,"country"),city:field(x,"city")}))}
+ // V18.14: full DB-backed metadata, not the small preview-card set.
+ const dbLocs=Array.isArray(window.MAESTRO_DB_LOCATIONS)?window.MAESTRO_DB_LOCATIONS:[];
+ function pairs(){return dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}))}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
  setopts(country,uniq(pairs().map(x=>x.country)),"All countries");
  function refill(){let c=canon(country.value);setopts(city,uniq(pairs().filter(x=>!c||norm(x.country)===norm(c)).map(x=>x.city)),"All cities / areas")}
@@ -23,12 +23,14 @@ function boot(){
  function wanted(x,c,ct,sec){return (!c||norm(field(x,"country"))===norm(c))&&(!ct||norm(field(x,"city"))===norm(ct))&&(!sec||type(x)===sec)}
 
  function updateDashboard(c,ct){
-   const all=cards();
-   const geo=x=>(!c||norm(field(x,"country"))===norm(c))&&(!ct||norm(field(x,"city"))===norm(ct));
-   const counts={news:0,sports:0,job:0,service:0,real_estate:0,vehicle:0,art:0,wellness:0,science:0,travel:0,politics:0,finance:0};
-   all.forEach(x=>{if(!geo(x))return;let t=type(x);if(Object.prototype.hasOwnProperty.call(counts,t))counts[t]++});
+   const sums={news:0,sports:0,job:0,service:0,real_estate:0,vehicle:0,art:0,wellness:0,science:0,travel:0,politics:0,finance:0};
+   dbLocs.forEach(r=>{
+     if(c&&norm(r.country)!==norm(c))return;
+     if(ct&&norm(r.city)!==norm(ct))return;
+     Object.entries(r.counts||{}).forEach(([k,v])=>{if(Object.prototype.hasOwnProperty.call(sums,k))sums[k]+=Number(v)||0});
+   });
    const map={"News":"news","Sports":"sports","Jobs":"job","Services":"service","Real Estate":"real_estate","Motors":"vehicle","Arts":"art","Wellness":"wellness","Science":"science","Travel":"travel","Politics":"politics","Finance":"finance"};
-   $$(".stats .stat").forEach(box=>{let label=(box.querySelector("span")?.textContent||"").trim(),key=map[label];if(key&&Object.prototype.hasOwnProperty.call(counts,key)){let b=box.querySelector("b");if(b)b.textContent=counts[key]}});
+   $$(".stats .stat").forEach(box=>{let label=(box.querySelector("span")?.textContent||"").trim(),key=map[label];if(key){let b=box.querySelector("b");if(b)b.textContent=sums[key]}});
  }
  function apply(){
    let c=canon(country.value),ct=city.value,sec=section.value;
