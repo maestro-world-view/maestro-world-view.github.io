@@ -49,7 +49,7 @@ function init(){
    cards.forEach(c=>{
      let text=c.innerText.toLowerCase();
      let ok=(!q||text.includes(q))&&(!co||text.includes(co))&&(!ci||text.includes(ci))&&(!ca||text.includes(ca))&&(!so||text.includes(so))&&(!sp||text.includes(sp));
-     c.style.display=ok?"":"none";if(ok)shown++;
+     if(ok){ if(!c.hidden)c.style.removeProperty("display"); } else { c.style.setProperty("display","none","important"); } if(ok&&!c.hidden)shown++;
    });
    count.textContent=shown+" of "+cards.length+" records";
  }
