@@ -12,7 +12,8 @@ function boot(){
  const canon=v=>aliases[(v||"").trim()]||(v||"").trim();
  const cards=$$(".mw-story,.card,.dating-card").filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
- const field=(x,k)=>{let a=attr(x,k);if(a)return k==="country"?canon(a):a;let t=(x.innerText||"").replace(/\s+/g," ");let rx=k==="country"?/(?:Country[:\s-]+)([A-Za-z .'-]{2,40})/i:/(?:City[:\s-]+)([A-Za-z .'-]{2,50})/i,m=t.match(rx);return m?(k==="country"?canon(m[1]):m[1].trim()):""};
+ // V18.9 strict target filtering: use only collection metadata rendered into data-country/data-city.
+ const field=(x,k)=>{let a=attr(x,k);return k==="country"?canon(a):a};
  const uniq=a=>[...new Set(a.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
  const esc=v=>String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
  const catalog=(Array.isArray(window.MAESTRO_LOCATIONS)?window.MAESTRO_LOCATIONS:[]).map(x=>({country:canon(x.country),city:(x.city||"").trim()}));
@@ -25,6 +26,14 @@ function boot(){
   let c=canon(country.value),ct=city.value,sec=section.value;
   localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
   cards.forEach(x=>{let xc=field(x,"country"),xt=field(x,"city"),typ=type(x);x.style.display=((!c||xc===c)&&(!ct||xt===ct)&&(!sec||typ===sec))?"":"none"});
+  $$(".mw-filter-empty").forEach(x=>x.remove());
+  if(c||ct){
+    const visible=cards.filter(x=>x.style.display!=="none");
+    if(!visible.length){
+      const host=$(".mw-editorial-section,.mw-top-stories,main,body");
+      if(host){let e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.appendChild(e)}
+    }
+  }
   const isIndex=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
   if(isIndex){
     $$(".mw-live-section[data-mw-section]").forEach(box=>{
