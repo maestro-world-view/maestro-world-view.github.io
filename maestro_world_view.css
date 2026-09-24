@@ -258,3 +258,63 @@ body{background:#000!important;color:#fff!important}
  .mw-news-thumb,.mw-latest .mw-news-thumb,.mw-top-side .mw-news-thumb,
  .mw-listing-thumb{width:124px!important;height:88px!important}
 }
+
+/* =====================================================================
+   V16.4 TYPOGRAPHY NORMALIZATION — GOOGLE-NEWS-LIKE FEED SCALE
+   One sans-serif system across news, sports, listings and topic pages.
+   ===================================================================== */
+body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.mw-latest,
+.mw-news-hero,.mw-news-row,.mw-listing-row,.card,.tile,.mw-global-card,.mw-live-section{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+}
+.mw-editorial-head h2,.mw-section-wrap>h1{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+ font-weight:700!important;letter-spacing:0!important;
+}
+.mw-editorial-head h2{font-size:20px!important;line-height:1.25!important}
+.mw-section-wrap>h1{font-size:28px!important;line-height:1.2!important}
+
+/* Lead story remains visually dominant, but uses the same sans-serif family. */
+.mw-hero-copy h2,.mw-hero-copy h2 a{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+ font-size:30px!important;line-height:1.16!important;font-weight:700!important;letter-spacing:-.25px!important;
+}
+.mw-hero-copy p{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+ font-size:14px!important;line-height:1.45!important;font-weight:400!important;
+}
+
+/* Standard feed/listing headline scale. */
+.mw-news-row h3,.mw-news-row h3 a,
+.mw-listing-row h3,.card h2,.tile h2,.mw-story h2,.mw-story h3{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+ font-size:18px!important;line-height:1.28!important;font-weight:700!important;letter-spacing:0!important;
+}
+.mw-news-row p,.mw-listing-row p,.card .desc,.card .facts,.mw-story p{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+ font-size:14px!important;line-height:1.43!important;font-weight:400!important;
+}
+.mw-news-meta,.mw-listing-row .src,.card .meta,.mw-coverage,.mw-top-meta,.mw-story .src{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+ font-size:12px!important;line-height:1.3!important;font-weight:500!important;
+}
+.mw-source-button,.stat-open,.mw-view-more-wrap .stat-open{
+ font-family:Arial,"Segoe UI",sans-serif!important;
+ font-size:11px!important;font-weight:700!important;text-decoration:none!important;
+}
+@media(max-width:760px){
+ .mw-editorial-head h2{font-size:18px!important}
+ .mw-section-wrap>h1{font-size:24px!important}
+ .mw-hero-copy h2,.mw-hero-copy h2 a{font-size:22px!important;line-height:1.18!important}
+ .mw-hero-copy p{font-size:14px!important;line-height:1.4!important}
+ .mw-news-row h3,.mw-news-row h3 a,
+ .mw-listing-row h3,.card h2,.tile h2,.mw-story h2,.mw-story h3{
+   font-size:16px!important;line-height:1.25!important
+ }
+ .mw-news-row p,.mw-listing-row p,.card .desc,.card .facts,.mw-story p{
+   font-size:13px!important;line-height:1.4!important
+ }
+ .mw-news-meta,.mw-listing-row .src,.card .meta,.mw-coverage,.mw-top-meta,.mw-story .src{
+   font-size:11px!important
+ }
+}
