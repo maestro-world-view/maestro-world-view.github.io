@@ -13,7 +13,7 @@ function boot(){
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
- // V18.15: full DB-backed metadata, not the small preview-card set.
+ // V18.16: full DB-backed metadata, not the small preview-card set.
  const dbLocs=Array.isArray(window.MAESTRO_DB_LOCATIONS)?window.MAESTRO_DB_LOCATIONS:[];
  function pairs(){return dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}))}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
@@ -29,6 +29,8 @@ function boot(){
      return;
    }
    // Geographic filter: calculate from the complete DB-backed location matrix.
+   // Never replace authoritative server totals with zeros if DB metadata failed to load.
+   if(!dbLocs.length)return;
    const sums={news:0,sports:0,job:0,service:0,real_estate:0,vehicle:0,art:0,wellness:0,science:0,travel:0,politics:0,finance:0};
    dbLocs.forEach(r=>{
      if(c&&norm(r.country)!==norm(c))return;
