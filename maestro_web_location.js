@@ -13,7 +13,7 @@ function boot(){
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
- // V18.14: full DB-backed metadata, not the small preview-card set.
+ // V18.15: full DB-backed metadata, not the small preview-card set.
  const dbLocs=Array.isArray(window.MAESTRO_DB_LOCATIONS)?window.MAESTRO_DB_LOCATIONS:[];
  function pairs(){return dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}))}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
@@ -23,6 +23,12 @@ function boot(){
  function wanted(x,c,ct,sec){return (!c||norm(field(x,"country"))===norm(c))&&(!ct||norm(field(x,"city"))===norm(ct))&&(!sec||type(x)===sec)}
 
  function updateDashboard(c,ct){
+   // No geographic filter: restore authoritative whole-database totals rendered by page_chrome.py.
+   if(!c&&!ct){
+     $$(".stats .stat").forEach(box=>{let b=box.querySelector("b");if(b&&box.dataset.total!==undefined)b.textContent=box.dataset.total});
+     return;
+   }
+   // Geographic filter: calculate from the complete DB-backed location matrix.
    const sums={news:0,sports:0,job:0,service:0,real_estate:0,vehicle:0,art:0,wellness:0,science:0,travel:0,politics:0,finance:0};
    dbLocs.forEach(r=>{
      if(c&&norm(r.country)!==norm(c))return;
