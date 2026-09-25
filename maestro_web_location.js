@@ -13,7 +13,7 @@ function boot(){
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
- // V18.17: full DB-backed metadata, not the small preview-card set.
+ // V19.0: full DB-backed metadata, not the small preview-card set.
  const dbLocs=Array.isArray(window.MAESTRO_DB_LOCATIONS)?window.MAESTRO_DB_LOCATIONS:[];
  function pairs(){return dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}))}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
