@@ -5,11 +5,12 @@ const abs=u=>{u=String(u||"");return !u?"":/^https?:\/\//i.test(u)?u:api()+u};
 async function g(p){try{let r=await fetch(api()+p,{cache:"no-store"});return r.ok?await r.json():[]}catch{return[]}}
 function notify(){document.dispatchEvent(new CustomEvent("maestro:cloud-updated"));}
 function stamp(v){try{return new Intl.DateTimeFormat(undefined,{year:"numeric",month:"short",day:"numeric"}).format(new Date(v))}catch{return""}}
-function communityMeta(x){return `<div class="src mw-community-meta"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span>${x.city||x.country?` · ${e([x.city,x.country].filter(Boolean).join(" · "))}`:""}${x.created_at?` · ${e(stamp(x.created_at))}`:""}</div>`}
+function communityMeta(x){return `<div class="src mw-community-meta"><img class="mw-source-icon mw-community-icon" src="logo.png" alt="Maestro World View"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span>${x.city||x.country?` · ${e([x.city,x.country].filter(Boolean).join(" · "))}`:""}${x.created_at?` · ${e(stamp(x.created_at))}`:""}</div>`}
 function listingCard(x,section,mode){
  const img=abs(x.image_url)||"logo1.png";
- const link=x.external_url||x.contact_url||"";
- const desc=e(x.description||"");
+ const link=`community_article.html?id=${encodeURIComponent(x.id||"")}&section=${encodeURIComponent(section||x.section||"")}`;
+ const raw=String(x.description||"");
+ const desc=e(raw.length>320?raw.slice(0,317).trimEnd()+"…":raw);
  const extra=[x.organization,x.price].filter(Boolean).map(e).join(" · ");
  if(mode==="market") return `<article class="card mw-cloud-card" data-cloud-id="${e(x.id)}" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}"><img class="mw-feed-image" src="${e(img)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo1.png'"><div>${communityMeta(x)}<h2>${e(x.title)}</h2>${extra?`<div class="facts">${extra}</div>`:""}<p class="desc">${desc}</p>${x.contact_email?`<div class="contact">${e(x.contact_email)}</div>`:""}${link?`<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a>`:""}</div></article>`;
  if(mode==="listing") return `<article class="mw-listing-row mw-story mw-cloud-card" data-cloud-id="${e(x.id)}" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}"><img class="mw-feed-image mw-listing-thumb" src="${e(img)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo1.png'"><div class="mw-listing-copy">${communityMeta(x)}<h3>${e(x.title)}</h3>${extra?`<div class="mw-cloud-facts">${extra}</div>`:""}<p>${desc}</p>${link?`<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a>`:""}</div></article>`;
