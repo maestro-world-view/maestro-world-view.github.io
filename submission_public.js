@@ -1,28 +1,29 @@
 (()=>{
- const api=()=>String(window.MAESTRO_SUBMISSION_API||"").replace(/\/$/,"");
- const e=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
- const date=s=>{try{return new Date(s).toLocaleDateString(undefined,{month:"short",day:"2-digit",year:"numeric"})}catch{return""}};
- async function g(p){try{let r=await fetch(api()+p,{cache:"no-store"});return r.ok?await r.json():[]}catch{return[]}}
- const img=x=>x?api()+x:"logo1.png";
- window.loadSubmittedResumes=async()=>{let h=document.querySelector("#submitted-resumes");if(!h)return;let a=await g("/api/resumes");h.innerHTML=a.map(x=>`<article class="mw-submit-card mw-story" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="resume">${x.profile_image_url?`<img class="mw-feed-image" src="${e(api()+x.profile_image_url)}" alt="">`:""}<h2>${e(x.first_name+" "+(x.last_name||""))}</h2><h3>${e(x.headline||x.current_role||"Professional profile")}</h3><div>${e([x.current_role,x.company,x.city,x.country].filter(Boolean).join(" · "))}</div><p>${e(x.summary||"")}</p><p><b>Skills:</b> ${e(x.skills||"")}</p>${x.linkedin_url?`<a target="_blank" rel="noopener" href="${e(x.linkedin_url)}">Professional Link</a>`:""} ${x.resume_url?`<a target="_blank" rel="noopener" href="${e(api()+x.resume_url)}">Resume file</a>`:""}</article>`).join("")};
- window.loadSubmittedDating=async()=>{let h=document.querySelector("#submitted-dating");if(!h)return;let a=await g("/api/dating");h.innerHTML=a.map(x=>`<article class="dating-card mw-story" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="dating">${x.photo_url?`<img class="pic" src="${e(api()+x.photo_url)}" alt="">`:""}<div class="dating-copy"><h2>${e(x.first_name+" "+(x.last_name||""))}, ${e(x.age)}</h2><h3>${e(x.headline||"Dating profile")}</h3><div>${e([x.gender,x.occupation,x.city,x.country].filter(Boolean).join(" · "))}</div><p>${e(x.bio||"")}</p><p><b>Interests:</b> ${e(x.interests||"")}</p><p><b>Looking for:</b> ${e(x.relationship_goal||"")}</p>${x.contact_url?`<a target="_blank" rel="noopener" href="${e(x.contact_url)}">CONTACT / PROFILE</a>`:""}</div></article>`).join("")};
- function communityCard(x,section){
-   const meta=[x.city,x.country,date(x.created_at)].filter(Boolean).join(" · ");
-   const contact=x.external_url||x.contact_url||"";
-   return `<article class="mw-news-row mw-story mw-community-card" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}" data-community-id="${e(x.id)}"><img class="mw-feed-image" src="${e(img(x.image_url))}" alt="" onerror="this.src='logo1.png'"><div class="mw-news-row-copy"><div class="mw-news-meta mw-community-meta"><img class="mw-source-icon" src="logo.png" alt=""><span>Maestro World View · ${e(meta)}</span></div><div class="mw-user-badge">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</div><h3>${contact?`<a target="_blank" rel="noopener" href="${e(contact)}">${e(x.title)}</a>`:e(x.title)}</h3><p>${e(x.description||"")}</p>${x.organization?`<div class="mw-community-detail">${e(x.organization)}</div>`:""}${x.price?`<div class="mw-community-price">${e(x.price)}</div>`:""}${contact?`<a class="mw-source-button" target="_blank" rel="noopener" href="${e(contact)}">OPEN / CONTACT</a>`:""}</div></article>`;
- }
- window.loadSubmittedListings=async function(section){
-   let h=document.querySelector("#submitted-community");if(!h)return;
-   const latest=document.querySelector(".mw-latest");
-   if(latest && h.parentElement!==latest) latest.appendChild(h);
-   let a=await g("/api/listings/"+encodeURIComponent(section));
-   a=[...a].sort((A,B)=>String(B.created_at||"").localeCompare(String(A.created_at||"")));
-   h.innerHTML=a.map(x=>communityCard(x,section)).join("");
-   try{window.dispatchEvent(new Event("maestro:community-updated"))}catch{}
- };
- window.startSubmittedListings=function(section){
-   window.loadSubmittedListings(section);
-   if(window.__mwCommunityTimer)clearInterval(window.__mwCommunityTimer);
-   window.__mwCommunityTimer=setInterval(()=>window.loadSubmittedListings(section),30000);
- };
+const api=()=>String(window.MAESTRO_SUBMISSION_API||"").replace(/\/$/,"");
+const e=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const abs=u=>{u=String(u||"");return !u?"":/^https?:\/\//i.test(u)?u:api()+u};
+async function g(p){try{let r=await fetch(api()+p,{cache:"no-store"});return r.ok?await r.json():[]}catch{return[]}}
+function notify(){document.dispatchEvent(new CustomEvent("maestro:cloud-updated"));}
+function stamp(v){try{return new Intl.DateTimeFormat(undefined,{year:"numeric",month:"short",day:"numeric"}).format(new Date(v))}catch{return""}}
+function communityMeta(x){return `<div class="src mw-community-meta"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span>${x.city||x.country?` · ${e([x.city,x.country].filter(Boolean).join(" · "))}`:""}${x.created_at?` · ${e(stamp(x.created_at))}`:""}</div>`}
+function listingCard(x,section,mode){
+ const img=abs(x.image_url)||"logo1.png";
+ const link=x.external_url||x.contact_url||"";
+ const desc=e(x.description||"");
+ const extra=[x.organization,x.price].filter(Boolean).map(e).join(" · ");
+ if(mode==="market") return `<article class="card mw-cloud-card" data-cloud-id="${e(x.id)}" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}"><img class="mw-feed-image" src="${e(img)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo1.png'"><div>${communityMeta(x)}<h2>${e(x.title)}</h2>${extra?`<div class="facts">${extra}</div>`:""}<p class="desc">${desc}</p>${x.contact_email?`<div class="contact">${e(x.contact_email)}</div>`:""}${link?`<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a>`:""}</div></article>`;
+ if(mode==="listing") return `<article class="mw-listing-row mw-story mw-cloud-card" data-cloud-id="${e(x.id)}" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}"><img class="mw-feed-image mw-listing-thumb" src="${e(img)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo1.png'"><div class="mw-listing-copy">${communityMeta(x)}<h3>${e(x.title)}</h3>${extra?`<div class="mw-cloud-facts">${extra}</div>`:""}<p>${desc}</p>${link?`<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a>`:""}</div></article>`;
+ return `<article class="mw-news-row mw-story mw-cloud-card" data-cloud-id="${e(x.id)}" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}"><img class="mw-feed-image mw-news-thumb" src="${e(img)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo1.png'"><div class="mw-news-row-copy">${communityMeta(x)}<h3>${e(x.title)}</h3>${extra?`<div class="mw-cloud-facts">${extra}</div>`:""}<p>${desc}</p>${link?`<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a>`:""}</div></article>`;
+}
+function targetFor(section){
+ const scoped=document.querySelector(`.mw-editorial-section[data-mw-section="${CSS.escape(section)}"]`);if(scoped){let vm=scoped.querySelector(".mw-view-more-wrap");return{host:scoped,before:vm||null,mode:scoped.querySelector(".mw-listing-row")?"listing":"news"}}
+ const market=["job","service","real_estate","vehicle","art"].includes(section);
+ if(market){let first=document.querySelector("article.card");if(first)return {host:first.parentElement,before:first,mode:"market"};let h=document.querySelector("header h1")?.parentElement||document.querySelector("main")||document.body;return{host:h,before:null,mode:"market"}}
+ let latest=document.querySelector(".mw-latest");if(latest){let head=latest.querySelector(".mw-editorial-head");return{host:latest,before:head?head.nextSibling:latest.firstChild,mode:"news"}}
+ let main=document.querySelector(".mw-section-wrap,.wrap,main")||document.body;return{host:main,before:null,mode:"news"};
+}
+function replaceCloud(section,a){document.querySelectorAll(`.mw-cloud-card[data-type="${CSS.escape(section)}"]`).forEach(n=>n.remove());let t=targetFor(section);let box=document.createElement("div");box.innerHTML=a.map(x=>listingCard(x,section,t.mode)).join("");let nodes=[...box.children];if(t.before)nodes.reverse().forEach(n=>t.host.insertBefore(n,t.before));else nodes.forEach(n=>t.host.appendChild(n));notify();}
+window.loadSubmittedListings=async function(section){let a=await g("/api/listings/"+section);replaceCloud(section,a);window.__mwCloudTimers=window.__mwCloudTimers||{};if(!window.__mwCloudTimers[section])window.__mwCloudTimers[section]=setInterval(()=>window.loadSubmittedListings(section),30000)};
+window.loadSubmittedResumes=async()=>{let h=document.querySelector("#submitted-resumes");if(!h)return;let a=await g("/api/resumes");h.innerHTML=a.map(x=>`<article class="card mw-story mw-cloud-card" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="resume">${x.profile_image_url?`<img class="mw-feed-image" src="${e(abs(x.profile_image_url))}" alt="">`:""}<div><div class="src"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span></div><h2>${e(x.first_name+" "+(x.last_name||""))}</h2><h3>${e(x.headline||x.current_role||"Professional profile")}</h3><p>${e(x.summary||"")}</p></div></article>`).join("");notify()};
+window.loadSubmittedDating=async()=>{let h=document.querySelector("#submitted-dating");if(!h)return;let a=await g("/api/dating");h.innerHTML=a.map(x=>`<article class="dating-card mw-story mw-cloud-card" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="dating"><div class="dating-copy"><div class="src"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span></div><h2>${e(x.first_name+" "+(x.last_name||""))}, ${e(x.age)}</h2><h3>${e(x.headline||"Dating profile")}</h3><p>${e(x.bio||"")}</p></div></article>`).join("");notify()};
 })();

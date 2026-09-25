@@ -1,7 +1,7 @@
 (function(){
 function boot(){
  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
- const country=$("#mw-country"),city=$("#mw-city"),section=$("#mw-section"),current=$("#mw-location-current");
+ const country=$("#mw-country"),city=$("#mw-city"),section=$("#mw-section"),keyword=$("#mw-keyword"),current=$("#mw-location-current");
  if(!country||!city)return;
  const aliases={"US":"United States","USA":"United States","U.S.":"United States","United States of America":"United States","UK":"United Kingdom","U.K.":"United Kingdom"};
  const canon=v=>aliases[(v||"").trim()]||(v||"").trim();
@@ -13,9 +13,9 @@ function boot(){
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
- // V19.0: full DB-backed metadata, not the small preview-card set.
+ // V19.1: full DB-backed metadata, not the small preview-card set.
  const dbLocs=Array.isArray(window.MAESTRO_DB_LOCATIONS)?window.MAESTRO_DB_LOCATIONS:[];
- function pairs(){return dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}))}
+ function pairs(){let a=dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}));cards().forEach(x=>{let c=field(x,"country"),ct=field(x,"city");if(c)a.push({country:c,city:ct})});return a}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
  setopts(country,uniq(pairs().map(x=>x.country)),"All countries");
  function refill(){let c=canon(country.value);setopts(city,uniq(pairs().filter(x=>!c||norm(x.country)===norm(c)).map(x=>x.city)),"All cities / areas")}
@@ -41,14 +41,14 @@ function boot(){
    $$(".stats .stat").forEach(box=>{let label=(box.querySelector("span")?.textContent||"").trim(),key=map[label];if(key){let b=box.querySelector("b");if(b)b.textContent=sums[key]}});
  }
  function apply(){
-   let c=canon(country.value),ct=city.value,sec=section.value;
+   let c=canon(country.value),ct=city.value,sec=section.value,q=(keyword?.value||"").trim().toLocaleLowerCase();
    // Dedicated pages already define their section. A stale section preference must not hide their feed.
    const page=(location.pathname.split("/").pop()||"index.html").toLowerCase();
    const dedicatedKey=Object.entries(sectionPages).find(([k,v])=>v.toLowerCase()===page)?.[0]||"";
    if(dedicatedKey)sec=dedicatedKey;
    localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
    let all=cards(),shown=0;
-   all.forEach(x=>{let ok=wanted(x,c,ct,sec);x.hidden=!ok;x.style.setProperty("display",ok?"":"none","important");if(ok)shown++});
+   all.forEach(x=>{let ok=wanted(x,c,ct,sec)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));x.hidden=!ok;x.style.setProperty("display",ok?"":"none","important");if(ok)shown++});
    $$(".mw-filter-empty").forEach(x=>x.remove());
    if((c||ct)&&!shown){let host=$(".mw-section-wrap,.wrap,main")||document.body,e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.prepend(e)}
    const isIndex=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
@@ -57,13 +57,14 @@ function boot(){
    if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")+" · "+shown+" matching items"):("Showing all available areas · "+shown+" items");
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
- country.addEventListener("change",()=>{refill();apply()});city.addEventListener("change",apply);section.addEventListener("change",apply);
+ country.addEventListener("change",()=>{refill();apply()});city.addEventListener("change",apply);section.addEventListener("change",apply);keyword?.addEventListener("input",apply);
  $("#mw-apply-location")?.addEventListener("click",()=>{apply();let sec=section.value;if(sec&&sectionPages[sec]){let target=sectionPages[sec],cur=(location.pathname.split("/").pop()||"index.html").toLowerCase();if(cur!==target.toLowerCase())window.open(target,"_blank","noopener")}});
- $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";apply()});
+ $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
  let sc=canon(localStorage.getItem("mw_web_country")||""),st=localStorage.getItem("mw_web_city")||"",ss=localStorage.getItem("mw_web_section")||"";
  let co=[...country.options].find(o=>norm(o.value)===norm(sc));if(co){country.value=co.value;refill()}else refill();
  let cio=[...city.options].find(o=>norm(o.value)===norm(st));if(cio)city.value=cio.value;
  if([...section.options].some(o=>o.value===ss))section.value=ss;
+ document.addEventListener("maestro:cloud-updated",()=>{let oldC=country.value,oldCity=city.value;setopts(country,uniq(pairs().map(x=>x.country)),"All countries");let hit=[...country.options].find(o=>norm(o.value)===norm(oldC));if(hit)country.value=hit.value;refill();let chit=[...city.options].find(o=>norm(o.value)===norm(oldCity));if(chit)city.value=chit.value;apply()});
  apply();
  // Other Maestro scripts may touch card display. Reassert exact location filtering after DOM mutations.
  let pending=false;
