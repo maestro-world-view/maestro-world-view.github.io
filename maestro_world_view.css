@@ -570,7 +570,7 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
 }
 \n/* =====================================================================\n   V17.2 FEED WIDTH + REMOTE WIDE FALLBACK HARD FIX\n   ===================================================================== */\n.mw-section-wrap{max-width:1400px!important;width:calc(100% - 48px)!important;margin-left:auto!important;margin-right:auto!important}\n.mw-featured,.mw-latest,.mw-top-stories{width:100%!important;max-width:none!important}\n.mw-featured .mw-news-hero,.mw-latest .mw-news-row,.mw-top-list .mw-news-hero,.mw-top-list .mw-news-row{\n width:100%!important;max-width:none!important;\n grid-template-columns:320px minmax(0,1fr)!important;\n column-gap:30px!important;box-sizing:border-box!important;\n}\n.mw-featured .mw-hero-copy,.mw-latest .mw-news-row-copy,.mw-top-list .mw-hero-copy,.mw-top-list .mw-news-row-copy{\n width:100%!important;max-width:none!important;min-width:0!important;\n justify-self:stretch!important;box-sizing:border-box!important;\n}\n.mw-featured .mw-hero-copy p,.mw-latest .mw-news-row-copy p,.mw-top-list .mw-hero-copy p,.mw-top-list .mw-news-row-copy p{\n width:100%!important;max-width:none!important;white-space:normal!important;\n -webkit-line-clamp:unset!important;overflow:visible!important;\n}\n.mw-feed-image[src="https://maestro-world-view.github.io/logo1.png"]{\n width:320px!important;height:216px!important;min-width:320px!important;max-width:320px!important;\n min-height:216px!important;max-height:216px!important;object-fit:cover!important;object-position:center!important;\n padding:0!important;background:#0d0f10!important;border-radius:12px!important;\n}\n@media(max-width:760px){\n .mw-section-wrap{width:calc(100% - 20px)!important}\n .mw-featured .mw-news-hero,.mw-latest .mw-news-row,.mw-top-list .mw-news-hero,.mw-top-list .mw-news-row{grid-template-columns:1fr!important}\n .mw-feed-image[src="https://maestro-world-view.github.io/logo1.png"]{width:100%!important;height:auto!important;min-width:0!important;max-width:100%!important;min-height:0!important;max-height:none!important;aspect-ratio:16/9!important}\n}\n
 /* =====================================================================
-   V18.8 DESKTOP FEED / FALLBACK IMAGE / TRENDING FINAL RESET
+   V18.19 DESKTOP FEED / FALLBACK IMAGE / TRENDING FINAL RESET
    ===================================================================== */
 .mw-trending{display:none!important}
 
@@ -628,7 +628,7 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  }
 }
 
-/* V18.8.1 SOURCE BADGE FIX */
+/* V18.19.1 SOURCE BADGE FIX */
 .mw-news-meta{display:flex!important;align-items:center!important;gap:8px!important}
 .mw-news-meta .mw-source-icon{
  width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important;
@@ -637,7 +637,7 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  flex:0 0 22px!important;
 }
 
-/* V18.8 UNIVERSAL SOURCE ICON */
+/* V18.19 UNIVERSAL SOURCE ICON */
 .mw-source-icon{
  width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important;
  min-height:22px!important;max-height:22px!important;object-fit:contain!important;
@@ -645,8 +645,17 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  vertical-align:middle!important;
 }
 
-/* V18.8 LISTING FALLBACK ART */
+/* V18.19 LISTING FALLBACK ART */
 .mw-listing-row .mw-feed-image[src*="logo1.png"],
 .card .mw-feed-image[src*="logo1.png"]{
  object-fit:contain!important;object-position:center!important;background:#050607!important;
 }
+
+/* V18.19 visitor growth CTAs */
+.mw-submit-cta,.mw-section-submit{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:12px 16px;background:#08121f}
+.mw-submit-cta a,.mw-section-submit a{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:#fff;color:#08121f;text-decoration:none;font-weight:900;font-size:14px}
+.mw-section-submit{justify-content:flex-start;padding:12px 0;background:transparent}
+.mw-section-submit a{background:#dfe8f2}
+.mw-user-badge{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.08em;padding:5px 8px;border-radius:999px;background:#263b52;color:#fff;margin-bottom:8px}
+.mw-community-submissions{margin-bottom:20px}
+@media(max-width:700px){.mw-submit-cta{display:grid;grid-template-columns:1fr;gap:8px}.mw-submit-cta a{width:100%;box-sizing:border-box}.mw-mobile-sections{display:none!important}}
