@@ -8,19 +8,43 @@ function ensure(){let host=document.querySelector('.mw-ask-maestro');if(host)ret
 function local(q){const seen=new Set(),community=[],harvested=[];document.querySelectorAll(CARD_SEL).forEach(n=>{if(n.closest('#mw-search-results'))return;let txt=norm(n.innerText);if(!txt.includes(q))return;let title=(n.querySelector('h1,h2,h3')?.textContent||'Maestro record').trim(),desc=(n.querySelector('p,.desc,.summary')?.textContent||n.innerText||'').trim().slice(0,500),a=n.querySelector('a[href]'),href=a?.href||location.href,key=title+'|'+href;if(seen.has(key))return;seen.add(key);let r={title,description:desc,url:href};(n.classList.contains('mw-cloud-card')?community:harvested).push(r)});return{community,harvested}}
 function setSearchMode(on){
  document.body.classList.toggle('mw-search-active',!!on);
- // V22.10: search is a results view. Keep site chrome/search controls visible,
- // but suppress the normal section/index content underneath until Clear Search.
  document.body.dataset.mwSearchMode=on?'1':'0';
- // Search is global. Location filtering remains selected in the UI but must not constrain
- // Ask Maestro results. Only content cards are released; header/filter chrome is untouched.
- document.querySelectorAll(CARD_SEL).forEach(n=>{
-   if(n.closest('#mw-search-results'))return;
+
+ // Search is a dedicated results view. Hide/restore actual DOM nodes instead of relying
+ // on page-specific CSS structure. This works identically on Index and section pages.
+ [...document.body.children].forEach(n=>{
+   if(n.matches('.mw-brandbar,.mw-ask-maestro,.mw-site-footer'))return;
    if(on){
-     if(!n.hasAttribute('data-mw-search-hidden'))n.setAttribute('data-mw-search-hidden',n.hidden?'1':'0');
-     n.hidden=false;
-   }else if(n.hasAttribute('data-mw-search-hidden')){
-     n.hidden=n.getAttribute('data-mw-search-hidden')==='1';
-     n.removeAttribute('data-mw-search-hidden');
+     if(!n.hasAttribute('data-mw-search-display')){
+       n.setAttribute('data-mw-search-display',n.style.display||'');
+       n.setAttribute('data-mw-search-was-hidden',n.hidden?'1':'0');
+     }
+     n.hidden=true;
+     n.style.setProperty('display','none','important');
+   }else if(n.hasAttribute('data-mw-search-display')){
+     n.style.removeProperty('display');
+     let old=n.getAttribute('data-mw-search-display');
+     if(old)n.style.display=old;
+     n.hidden=n.getAttribute('data-mw-search-was-hidden')==='1';
+     n.removeAttribute('data-mw-search-display');
+     n.removeAttribute('data-mw-search-was-hidden');
+   }
+ });
+
+ // Some generated pages place normal content inside the Ask Maestro wrapper.
+ // During a search keep ONLY the search form and result container visible there.
+ let ask=document.querySelector('.mw-ask-maestro');
+ if(ask)[...ask.children].forEach(n=>{
+   if(n.matches('#mw-ask-form,#mw-search-results,.mw-ask-box,form'))return;
+   if(on){
+     if(!n.hasAttribute('data-mw-search-inner-display'))
+       n.setAttribute('data-mw-search-inner-display',n.style.display||'');
+     n.style.setProperty('display','none','important');
+   }else if(n.hasAttribute('data-mw-search-inner-display')){
+     n.style.removeProperty('display');
+     let old=n.getAttribute('data-mw-search-inner-display');
+     if(old)n.style.display=old;
+     n.removeAttribute('data-mw-search-inner-display');
    }
  });
 }

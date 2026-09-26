@@ -1292,3 +1292,14 @@ body.mw-search-active #mw-search-results{
 body.mw-search-active .mw-site-footer{
  display:block!important;
 }
+
+
+/* V22.11 backup: nodes explicitly isolated by Ask Maestro stay hidden during search. */
+body.mw-search-active [data-mw-search-display],
+body.mw-search-active [data-mw-search-inner-display]{
+ display:none!important;
+}
+body.mw-search-active #mw-search-results,
+body.mw-search-active #mw-ask-form{
+ display:block!important;
+}
