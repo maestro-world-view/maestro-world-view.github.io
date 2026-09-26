@@ -733,3 +733,18 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  .mw-live-brand img{width:43px!important;height:43px!important}.mw-logo{font-size:16px!important;letter-spacing:1.4px!important}.mw-focus{font-size:10px!important;text-align:right}.mw-byline{font-size:11px!important}.mw-status{font-size:9px!important;white-space:nowrap}
  .mw-v20-tagline{padding:8px 10px!important}.mw-tagline-copy span{font-size:12px!important;letter-spacing:1px!important}.mw-tagline-copy .mw-community-invite{font-size:11px!important;line-height:1.35!important}
 }
+\n\n/* V20.4 universal two-line header: larger black-backed logo + section HOME */
+.mw-brandbar{background:#000!important;padding:8px 3%!important}
+.mw-head-line-1{min-height:70px!important}
+.mw-head-line-2{min-height:30px!important;padding-left:82px!important;background:#000!important}
+.mw-live-brand img{width:70px!important;height:70px!important;box-sizing:border-box!important;background:#000!important;padding:4px!important;border-radius:12px!important;object-fit:contain!important}
+.mw-head-actions{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:18px}
+.mw-header-home{display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;border:1px solid #35506c;border-radius:9px;background:#0b1725;color:#fff;text-decoration:none;font:800 11px/1 Arial,sans-serif;letter-spacing:.8px}
+.mw-header-home:hover{background:#14263a;color:#fff}
+.mw-byline{font-size:15px!important}.mw-status{font-size:12px!important}
+.mw-v20-tagline{background:#0b1828!important}
+@media(max-width:650px){
+ .mw-brandbar{padding:6px 8px!important}.mw-head-line-1{min-height:58px!important}.mw-head-line-2{min-height:28px!important;padding-left:0!important}
+ .mw-live-brand img{width:56px!important;height:56px!important;padding:3px!important}.mw-logo{font-size:16px!important;letter-spacing:1.25px!important}
+ .mw-head-actions{gap:7px}.mw-focus{font-size:9px!important}.mw-header-home{padding:6px 8px;font-size:9px!important}.mw-byline{font-size:12px!important}.mw-status{font-size:9px!important}
+}
