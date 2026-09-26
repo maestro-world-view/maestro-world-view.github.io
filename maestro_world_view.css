@@ -822,3 +822,55 @@ body.mw-search-active .mw-site-footer{display:block!important}
 .mw-people-bank{width:min(1500px,calc(100% - 48px));margin:24px auto}.mw-bank-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}.mw-bank-head h1{margin:0;color:#fff}.mw-bank-head p{margin:6px 0 0;color:#aebdce}
 .mw-bank-filters{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px;padding:16px;background:#101d2d;border:1px solid #29425e;border-radius:16px;margin-bottom:20px}.mw-bank-filters label{font:700 12px Arial;color:#fff}.mw-bank-filters input,.mw-bank-filters select{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:11px 12px;border-radius:9px;border:1px solid #405873;background:#08121f;color:#fff}.mw-person-card{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding:18px;margin:14px 0;background:#0d1724;border:1px solid #263d57;border-radius:14px;color:#e9f1f8}.mw-person-card img{width:150px;height:150px;object-fit:cover;border-radius:12px}.mw-person-card h2{margin:2px 0 8px}.mw-person-card p{color:#b9c8d8}.mw-person-card a{color:#62c4ff;font-weight:800}
 @media(max-width:760px){.mw-v21-header{grid-template-columns:145px minmax(0,1fr) auto;gap:9px;min-height:132px}.mw-v21-header .mw-header-logo{height:132px}.mw-v21-header .mw-header-logo img{width:140px!important;height:128px!important;max-width:140px!important}.mw-v21-titleblock{gap:5px}.mw-v21-titleblock .mw-logo{font-size:17px!important;letter-spacing:1.5px!important}.mw-v21-titleblock .mw-byline{font-size:11px!important}.mw-v21-right{padding:10px 0}.mw-v21-right .mw-status{font-size:9px!important}.mw-bank-filters{grid-template-columns:1fr 1fr}.mw-people-bank{width:calc(100% - 20px)}.mw-person-card{grid-template-columns:1fr}.mw-person-card img{width:100%;height:auto;max-height:320px}.mw-bank-head{align-items:flex-start;flex-direction:column}}
+\n\n/* V21.1 simplified centered brand header */\n.mw-brandbar{background:#000!important;padding:18px 3% 10px!important}\n.mw-v21-header-simple{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important;min-height:0!important;width:100%!important}\n.mw-v21-header-simple .mw-header-logo{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;height:auto!important}\n.mw-v21-header-simple .mw-header-logo img{display:block!important;width:400px!important;height:270px!important;max-width:min(400px,92vw)!important;object-fit:contain!important;object-position:center!important;background:#000!important;padding:0!important;border:0!important;border-radius:0!important}\n.mw-v21-underlogo{display:flex!important;align-items:center!important;justify-content:space-between!important;width:min(1400px,100%)!important;gap:16px!important;min-height:28px!important}\n.mw-v21-underlogo .mw-byline{font:italic 18px/1.2 Georgia,serif!important;color:#fff!important;text-align:left!important;white-space:nowrap!important}\n.mw-v21-under-right{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:16px!important;margin-left:auto!important}\n.mw-v21-underlogo .mw-status{font:14px/1.2 Arial,sans-serif!important;color:#39ef9d!important;white-space:nowrap!important}\n.mw-v21-underlogo .mw-header-home{font:800 11px Arial,sans-serif!important;color:#7fc9ff!important;text-decoration:none!important}\n@media(max-width:650px){\n .mw-brandbar{padding:10px 10px 8px!important}\n .mw-v21-header-simple .mw-header-logo img{width:300px!important;height:205px!important;max-width:96vw!important}\n .mw-v21-underlogo{gap:8px!important}\n .mw-v21-underlogo .mw-byline{font-size:11.5px!important;white-space:normal!important}\n .mw-v21-under-right{gap:8px!important}\n .mw-v21-underlogo .mw-status{font-size:9px!important}\n .mw-v21-underlogo .mw-header-home{font-size:8px!important}\n}\n
+/* =====================================================================
+   V21.2 AUTHORITATIVE MASTHEAD — logo1 only + byline/live line
+   ===================================================================== */
+/* Any legacy header left in generated HTML is suppressed. */
+.mw-brandbar:not(.mw-v212-brandbar){display:none!important}
+.mw-v212-brandbar{display:block!important;background:#000!important;padding:14px 3% 10px!important;border-bottom:1px solid #26364b!important}
+.mw-v212-header{width:100%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important}
+.mw-v212-logo{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;text-decoration:none!important}
+/* Match the large listing fallback footprint while preserving logo1 proportions. */
+.mw-v212-logo img{display:block!important;width:400px!important;height:270px!important;max-width:min(400px,94vw)!important;object-fit:contain!important;object-position:center!important;background:#000!important;margin:0 auto!important;padding:0!important;border:0!important;border-radius:0!important}
+.mw-v212-meta{display:flex!important;align-items:center!important;justify-content:space-between!important;width:min(1400px,100%)!important;min-height:28px!important;gap:16px!important}
+.mw-v212-byline{font:italic 18px/1.2 Georgia,serif!important;color:#fff!important;text-align:left!important;white-space:nowrap!important}
+.mw-v212-right{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:16px!important;margin-left:auto!important}
+.mw-v212-live{font:14px/1.2 Arial,sans-serif!important;color:#39ef9d!important;white-space:nowrap!important}
+.mw-v212-home{font:800 11px Arial,sans-serif!important;color:#7fc9ff!important;text-decoration:none!important}
+/* Never show the old redundant text title in the masthead. */
+.mw-v212-brandbar .mw-logo,.mw-v212-brandbar h1{display:none!important}
+@media(max-width:650px){
+ .mw-v212-brandbar{padding:8px 8px 7px!important}
+ .mw-v212-logo img{width:320px!important;height:216px!important;max-width:96vw!important}
+ .mw-v212-meta{gap:8px!important}
+ .mw-v212-byline{font-size:11.5px!important;white-space:normal!important}
+ .mw-v212-right{gap:8px!important}
+ .mw-v212-live{font-size:9px!important}
+ .mw-v212-home{font-size:8px!important}
+}
+
+
+/* =====================================================================
+   V21.3 PEOPLE BANK — community-only + safe fallback artwork
+   ===================================================================== */
+/* Never crop the Maestro fallback artwork on Dating or Resume cards. */
+.mw-people-bank .mw-person-card img[src*="logo1.png"],
+.mw-people-bank .mw-person-card img[data-fallback="maestro"],
+.dating-card img[src*="logo1.png"],
+.resume-card img[src*="logo1.png"],
+#submitted-dating img[src*="logo1.png"],
+#submitted-resumes img[src*="logo1.png"]{
+ object-fit:contain!important;
+ object-position:center!important;
+ background:#000!important;
+ padding:8px!important;
+ box-sizing:border-box!important;
+}
+/* Legacy harvested Dating/Resume containers must never coexist with V21 community banks. */
+body.mw-community-dating-only .dating-grid,
+body.mw-community-dating-only .dating-card:not(#submitted-dating .dating-card),
+body.mw-community-dating-only [data-source="harvested"],
+body.mw-community-resume-only .resume-grid,
+body.mw-community-resume-only .resume-card:not(#submitted-resumes .resume-card),
+body.mw-community-resume-only [data-source="harvested"]{display:none!important}
