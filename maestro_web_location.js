@@ -108,9 +108,15 @@ function boot(){
  $("#mw-apply-location")?.addEventListener("click",()=>{apply();let c=canon(country.value),ct=city.value,sec=section.value;if(sec&&sectionPages[sec]){let target=sectionPages[sec],cur=(location.pathname.split("/").pop()||"index.html").toLowerCase();if(cur!==target.toLowerCase())window.open(stateURL(target,c,ct,sec),"_blank","noopener")}});
  $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
  const params=new URLSearchParams(location.search);
- let sc=canon(params.has("country")?params.get("country"):(localStorage.getItem("mw_web_country")||""));
- let st=params.has("city")?params.get("city"):(localStorage.getItem("mw_web_city")||"");
- let ss=params.has("section")?params.get("section"):(localStorage.getItem("mw_web_section")||"");
+ const _indexDefault=isIndexPage();
+ let sc=_indexDefault?"":canon(params.has("country")?params.get("country"):(localStorage.getItem("mw_web_country")||""));
+ let st=_indexDefault?"":(params.has("city")?params.get("city"):(localStorage.getItem("mw_web_city")||""));
+ let ss=_indexDefault?"":(params.has("section")?params.get("section"):(localStorage.getItem("mw_web_section")||""));
+ if(_indexDefault){
+   localStorage.removeItem("mw_web_country");
+   localStorage.removeItem("mw_web_city");
+   localStorage.removeItem("mw_web_section");
+ }
  let co=[...country.options].find(o=>norm(o.value)===norm(sc));if(co){country.value=co.value;refill()}else refill();
  let cio=[...city.options].find(o=>norm(o.value)===norm(st));if(cio)city.value=cio.value;
  if([...section.options].some(o=>o.value===ss))section.value=ss;

@@ -1140,3 +1140,22 @@ body.mw-search-active [class*="location"]{
  display:revert!important;
  visibility:visible!important;
 }
+
+
+/* V22.2: search never removes site chrome; search is global, not location-scoped */
+body.mw-search-active .mw-brandbar,
+body.mw-search-active .mw-v218-header,
+body.mw-search-active .mw-ask-maestro,
+body.mw-search-active .mw-cta-nav,
+body.mw-search-active .mw-upload-actions,
+body.mw-search-active .mw-upload-row,
+body.mw-search-active .mw-location-shell,
+body.mw-search-active .mw-location-panel,
+body.mw-search-active .mw-world-filter,
+body.mw-search-active .mw-local-world-view,
+body.mw-search-active #mw-web-location,
+body.mw-search-active #mw-location-panel{
+ display:revert!important;
+ visibility:visible!important;
+ opacity:1!important;
+}
