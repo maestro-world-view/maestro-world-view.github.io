@@ -809,3 +809,16 @@ body.mw-search-active .mw-site-footer{display:block!important}
  .mw-v20-header-grid .mw-head-line-2{min-height:48px!important}
  .mw-site-footer{font-size:12px;padding:20px 10px 24px}
 }
+
+/* MAESTRO WORLD VIEW V21 — authoritative header + people banks */
+.mw-v21-header{display:grid;grid-template-columns:270px minmax(0,1fr) auto;align-items:center;gap:22px;min-height:245px}
+.mw-v21-header .mw-header-logo{display:flex;align-items:center;height:245px}
+.mw-v21-header .mw-header-logo img{width:260px!important;height:240px!important;max-width:260px!important;object-fit:contain!important;background:#000!important;padding:2px!important;border-radius:10px!important}
+.mw-v21-titleblock{align-self:center;display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:0}
+.mw-v21-titleblock .mw-logo{font-size:30px!important;letter-spacing:4px!important;line-height:1.05!important;color:#42a9ff!important;font-weight:900!important}
+.mw-v21-titleblock .mw-byline{font:italic 18px/1.15 Georgia,serif!important;color:#fff!important}
+.mw-v21-right{height:100%;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:22px 0;box-sizing:border-box}
+.mw-v21-right .mw-status{margin-top:auto}.mw-v21-right .mw-header-home{margin-left:auto}
+.mw-people-bank{width:min(1500px,calc(100% - 48px));margin:24px auto}.mw-bank-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}.mw-bank-head h1{margin:0;color:#fff}.mw-bank-head p{margin:6px 0 0;color:#aebdce}
+.mw-bank-filters{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px;padding:16px;background:#101d2d;border:1px solid #29425e;border-radius:16px;margin-bottom:20px}.mw-bank-filters label{font:700 12px Arial;color:#fff}.mw-bank-filters input,.mw-bank-filters select{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:11px 12px;border-radius:9px;border:1px solid #405873;background:#08121f;color:#fff}.mw-person-card{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding:18px;margin:14px 0;background:#0d1724;border:1px solid #263d57;border-radius:14px;color:#e9f1f8}.mw-person-card img{width:150px;height:150px;object-fit:cover;border-radius:12px}.mw-person-card h2{margin:2px 0 8px}.mw-person-card p{color:#b9c8d8}.mw-person-card a{color:#62c4ff;font-weight:800}
+@media(max-width:760px){.mw-v21-header{grid-template-columns:145px minmax(0,1fr) auto;gap:9px;min-height:132px}.mw-v21-header .mw-header-logo{height:132px}.mw-v21-header .mw-header-logo img{width:140px!important;height:128px!important;max-width:140px!important}.mw-v21-titleblock{gap:5px}.mw-v21-titleblock .mw-logo{font-size:17px!important;letter-spacing:1.5px!important}.mw-v21-titleblock .mw-byline{font-size:11px!important}.mw-v21-right{padding:10px 0}.mw-v21-right .mw-status{font-size:9px!important}.mw-bank-filters{grid-template-columns:1fr 1fr}.mw-people-bank{width:calc(100% - 20px)}.mw-person-card{grid-template-columns:1fr}.mw-person-card img{width:100%;height:auto;max-height:320px}.mw-bank-head{align-items:flex-start;flex-direction:column}}
