@@ -1271,3 +1271,24 @@ body.mw-section-page .mw-ask-maestro .mw-ask-form{
 body.mw-section-page > .mw-brandbar.mw-v224-brandbar{
  display:block!important;visibility:visible!important;opacity:1!important;
 }
+
+
+/* V22.10 SEARCH RESULTS VIEW
+   While Ask Maestro is active, show only site chrome + Ask Maestro + its result groups.
+   Normal Index/section records must not continue below the keyword results. */
+body.mw-search-active > *:not(.mw-brandbar):not(.mw-ask-maestro):not(.mw-site-footer){
+ display:none!important;
+}
+body.mw-search-active .mw-ask-maestro{
+ display:block!important;
+ visibility:visible!important;
+ opacity:1!important;
+}
+body.mw-search-active #mw-search-results{
+ display:block!important;
+ visibility:visible!important;
+ opacity:1!important;
+}
+body.mw-search-active .mw-site-footer{
+ display:block!important;
+}

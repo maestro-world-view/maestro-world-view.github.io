@@ -8,6 +8,9 @@ function ensure(){let host=document.querySelector('.mw-ask-maestro');if(host)ret
 function local(q){const seen=new Set(),community=[],harvested=[];document.querySelectorAll(CARD_SEL).forEach(n=>{if(n.closest('#mw-search-results'))return;let txt=norm(n.innerText);if(!txt.includes(q))return;let title=(n.querySelector('h1,h2,h3')?.textContent||'Maestro record').trim(),desc=(n.querySelector('p,.desc,.summary')?.textContent||n.innerText||'').trim().slice(0,500),a=n.querySelector('a[href]'),href=a?.href||location.href,key=title+'|'+href;if(seen.has(key))return;seen.add(key);let r={title,description:desc,url:href};(n.classList.contains('mw-cloud-card')?community:harvested).push(r)});return{community,harvested}}
 function setSearchMode(on){
  document.body.classList.toggle('mw-search-active',!!on);
+ // V22.10: search is a results view. Keep site chrome/search controls visible,
+ // but suppress the normal section/index content underneath until Clear Search.
+ document.body.dataset.mwSearchMode=on?'1':'0';
  // Search is global. Location filtering remains selected in the UI but must not constrain
  // Ask Maestro results. Only content cards are released; header/filter chrome is untouched.
  document.querySelectorAll(CARD_SEL).forEach(n=>{
