@@ -74,10 +74,15 @@ function boot(){
        const res=await fetch(sectionPages[k],{cache:"no-store"});
        if(!res.ok)continue;
        const doc=new DOMParser().parseFromString(await res.text(),"text/html");
-       const matches=[...doc.querySelectorAll(cardSelector)].filter(x=>wanted(x,c,ct,k)).slice(0,5);
+       const matches=[...doc.querySelectorAll(cardSelector)].filter(x=>{
+         const xc=canon((x.dataset&&x.dataset.country)||"");
+         const xct=((x.dataset&&x.dataset.city)||"").trim();
+         return (!c||norm(xc)===norm(c))&&(!ct||norm(xct)===norm(ct));
+       }).slice(0,5);
        matches.forEach(x=>{
          x.querySelectorAll("script").forEach(s=>s.remove());
          x.dataset.mwHydrated="1";
+         x.dataset.type=k;
          box.appendChild(document.importNode(x,true));
        });
      }
@@ -90,7 +95,11 @@ function boot(){
    const page=(location.pathname.split("/").pop()||"index.html").toLowerCase();
    const dedicatedKey=Object.entries(sectionPages).find(([k,v])=>v.toLowerCase()===page)?.[0]||"";
    if(dedicatedKey)sec=dedicatedKey;
-   localStorage.setItem("mw_web_country",c);localStorage.setItem("mw_web_city",ct);localStorage.setItem("mw_web_section",sec);
+   if(!isIndexPage()){
+     localStorage.setItem("mw_web_country",c);
+     localStorage.setItem("mw_web_city",ct);
+     localStorage.setItem("mw_web_section",sec);
+   }
    let all=cards(),shown=0;
    all.forEach(x=>{let ok=wanted(x,c,ct,sec)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));x.hidden=!ok;x.style.setProperty("display",ok?"":"none","important");if(ok)shown++});
    $$(".mw-filter-empty").forEach(x=>x.remove());
@@ -104,7 +113,7 @@ function boot(){
    if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")+" · "+shown+" matching items"):("Showing all available areas · "+shown+" items");
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
- country.addEventListener("change",()=>{refill();apply()});city.addEventListener("change",apply);section.addEventListener("change",apply);keyword?.addEventListener("input",apply);
+ country.addEventListener("change",()=>{hydrationKey="";refill();apply()});city.addEventListener("change",()=>{hydrationKey="";apply()});section.addEventListener("change",()=>{hydrationKey="";apply()});keyword?.addEventListener("input",apply);
  $("#mw-apply-location")?.addEventListener("click",()=>{apply();let c=canon(country.value),ct=city.value,sec=section.value;if(sec&&sectionPages[sec]){let target=sectionPages[sec],cur=(location.pathname.split("/").pop()||"index.html").toLowerCase();if(cur!==target.toLowerCase())window.open(stateURL(target,c,ct,sec),"_blank","noopener")}});
  $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
  const params=new URLSearchParams(location.search);
@@ -116,6 +125,7 @@ function boot(){
    localStorage.removeItem("mw_web_country");
    localStorage.removeItem("mw_web_city");
    localStorage.removeItem("mw_web_section");
+   localStorage.removeItem("maestro_place");
  }
  let co=[...country.options].find(o=>norm(o.value)===norm(sc));if(co){country.value=co.value;refill()}else refill();
  let cio=[...city.options].find(o=>norm(o.value)===norm(st));if(cio)city.value=cio.value;
