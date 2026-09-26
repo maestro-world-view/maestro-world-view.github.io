@@ -875,3 +875,86 @@ body.mw-community-resume-only .resume-grid,
 body.mw-community-resume-only .resume-card:not(#submitted-resumes .resume-card),
 body.mw-community-resume-only [data-source="harvested"]{display:none!important}
 \n\n/* V21.4 masthead: logo centered; LIVE shares the logo row; no byline */\n.mw-v214-brandbar{padding:14px 3%!important}\n.mw-v214-header{display:block!important;width:100%!important}\n.mw-v214-logo-line{position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:270px!important}\n.mw-v214-logo-line .mw-v212-logo{width:auto!important;margin:0 auto!important}\n.mw-v214-right{position:absolute!important;right:0!important;top:50%!important;transform:translateY(-50%)!important;display:flex!important;align-items:center!important;gap:16px!important}\n.mw-v214-brandbar .mw-v212-byline,.mw-v214-brandbar .mw-v212-meta{display:none!important}\n@media(max-width:650px){\n .mw-v214-brandbar{padding:8px!important}\n .mw-v214-logo-line{min-height:216px!important}\n .mw-v214-right{right:2px!important;top:10px!important;transform:none!important}\n}\n
+
+/* V21.7 authoritative masthead geometry */
+.mw-v214-brandbar{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  padding:0!important;
+  background:#000!important;
+  border-bottom:1px solid #233044!important;
+}
+.mw-v214-header{
+  position:relative!important;
+  width:100%!important;
+  padding:0 38px!important;
+}
+.mw-v214-logo-line{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:300px!important;
+}
+.mw-v212-logo{
+  display:block!important;
+  width:440px!important;
+  max-width:48vw!important;
+  height:auto!important;
+  margin:0 auto!important;
+  flex:0 0 auto!important;
+}
+.mw-v212-logo img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:270px!important;
+  object-fit:contain!important;
+}
+.mw-v214-right{
+  position:absolute!important;
+  right:0!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:26px!important;
+  white-space:nowrap!important;
+  margin:0!important;
+}
+.mw-v212-home,.mw-v212-live{
+  display:inline-flex!important;
+  align-items:center!important;
+  margin:0!important;
+  line-height:1!important;
+}
+.mw-v212-home{
+  color:#55b8ff!important;
+  text-decoration:none!important;
+  font-weight:800!important;
+}
+.mw-v212-live{
+  color:#35f0a1!important;
+}
+@media(max-width:760px){
+  .mw-v214-header{padding:0 14px!important}
+  .mw-v214-logo-line{
+    min-height:210px!important;
+    align-items:flex-start!important;
+    padding-top:18px!important;
+    padding-bottom:46px!important;
+  }
+  .mw-v212-logo{width:300px!important;max-width:82vw!important}
+  .mw-v212-logo img{max-height:165px!important}
+  .mw-v214-right{
+    right:0!important;
+    top:auto!important;
+    bottom:18px!important;
+    transform:none!important;
+    gap:18px!important;
+    font-size:12px!important;
+  }
+}

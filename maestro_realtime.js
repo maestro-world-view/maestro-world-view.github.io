@@ -43,7 +43,7 @@
  document.querySelectorAll('.mw-site-footer').forEach(function(x){x.remove();});
  const foot=document.createElement('footer');
  foot.className='mw-site-footer';
- foot.innerHTML='<div><strong>MAESTRO WORLD VIEW</strong></div><div><a href="disclaimer.html">Disclaimer</a><span aria-hidden="true"> · </span><a href="mailto:maestro.world.view@gmail.com">Inquiries: maestro.world.view@gmail.com</a></div>';
+ foot.innerHTML='<div><strong>MAESTRO WORLD VIEW</strong></div><div><a href="disclaimer.html" target="_blank" rel="noopener noreferrer">Disclaimer</a><span aria-hidden="true"> · </span><a href="mailto:maestro.world.view@gmail.com">Inquiries: maestro.world.view@gmail.com</a></div>';
  document.body.appendChild(foot);
  setTimeout(function(){location.reload()},300000);
 })();
