@@ -8,11 +8,10 @@
  document.querySelectorAll('.mw-brandbar,.mw-masthead,.mw-v20-head,.mw-v21-header').forEach(function(x){x.remove();});
  const isHome=/\/(?:index\.html)?$/.test(location.pathname)||location.pathname==='/' ;
  const bar=document.createElement('header');
- bar.className='mw-brandbar mw-v212-brandbar';
- bar.innerHTML='<div class="mw-v212-header">'
-   +'<a class="mw-v212-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a>'
-   +'<div class="mw-v212-meta"><div class="mw-v212-byline"><em>Brought to you by Maestro World View</em></div>'
-   +'<div class="mw-v212-right">'+(isHome?'':'<a class="mw-v212-home" href="index.html">HOME</a>')+'<span class="mw-v212-live">● LIVE · 5 MIN</span></div></div>'
+ bar.className='mw-brandbar mw-v212-brandbar mw-v214-brandbar';
+ bar.innerHTML='<div class="mw-v212-header mw-v214-header">'
+   +'<div class="mw-v214-logo-line"><a class="mw-v212-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a>'
+   +'<div class="mw-v214-right">'+(isHome?'':'<a class="mw-v212-home" href="index.html">HOME</a>')+'<span class="mw-v212-live">● LIVE · 5 MIN</span></div></div>'
    +'</div>';
  document.body.insertBefore(bar,document.body.firstChild);
 
