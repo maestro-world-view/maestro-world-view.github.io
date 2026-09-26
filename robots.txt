@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://maestro-world-view.github.io/sitemap.xml
