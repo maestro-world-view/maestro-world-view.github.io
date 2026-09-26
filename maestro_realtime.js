@@ -8,6 +8,8 @@
  document.querySelectorAll('.mw-brandbar,.mw-masthead,.mw-v20-head,.mw-v21-header').forEach(x=>x.remove());
 
  const isHome=/\/(?:index\.html)?$/.test(location.pathname)||location.pathname==='/';
+ document.body.classList.toggle('mw-home-page',isHome);
+ document.body.classList.toggle('mw-section-page',!isHome);
  const bar=document.createElement('header');
  bar.className='mw-brandbar mw-v224-brandbar';
  bar.innerHTML='<div class="mw-v224-header">'
@@ -32,7 +34,7 @@
  // V22.5 section pages: Ask Maestro is the single main search box.
  // Remove old generator-local search inputs; keep the one location-filter panel.
  if(!isHome){
-   document.querySelectorAll('input#q,input.mw-search').forEach(x=>x.remove());
+   document.querySelectorAll('input#q,input.mw-search,.mw-filterbar').forEach(x=>x.remove());
    const pickers=[...document.querySelectorAll('.mw-location-picker')];
    pickers.slice(1).forEach(x=>x.remove());
  }

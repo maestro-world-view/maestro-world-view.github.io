@@ -1242,3 +1242,27 @@ body:not(.mw-home-page) [data-mw-location-visible="0"]{
 body:not(.mw-home-page) .mw-location-picker ~ .mw-location-picker{
  display:none!important;
 }
+
+
+/* V22.6 — Ask Maestro is the ONE top search on section pages. */
+body:not(.mw-home-page) .mw-filterbar{display:none!important}
+
+
+/* V22.7 — Index/section top-chrome parity.
+   All normal pages use the same V22.4+ authoritative masthead and Ask Maestro geometry. */
+body.mw-section-page .mw-v224-brandbar,
+body.mw-section-page .mw-v224-header,
+body.mw-section-page .mw-ask-maestro{
+ visibility:visible!important;
+ opacity:1!important;
+}
+body.mw-section-page .mw-ask-maestro{
+ display:block!important;
+ width:100%!important;
+ background:#000!important;
+}
+body.mw-section-page .mw-ask-maestro form,
+body.mw-section-page .mw-ask-maestro .mw-ask-form{
+ width:min(1300px,calc(100% - 48px))!important;
+ margin:0 auto!important;
+}
