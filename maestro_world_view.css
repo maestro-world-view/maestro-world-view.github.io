@@ -718,3 +718,18 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  .mw-tagline-copy{font-size:11px!important}.mw-tagline-copy span{font-size:9px!important}
  .mw-tagline-copy .mw-community-invite{font-size:9px!important}
 }
+
+/* V20.3 two-line universal title + readable community invitation */
+.mw-brandbar{display:block!important;padding:9px 4%!important;background:#03070c!important}
+.mw-head-line{display:flex;align-items:center;justify-content:space-between;width:100%;gap:18px}
+.mw-head-line-1{min-height:54px}.mw-head-line-2{min-height:27px;padding-left:66px;border-top:1px solid rgba(80,150,210,.12)}
+.mw-live-brand img{width:50px!important;height:50px!important;background:#000!important;padding:3px!important;border-radius:10px!important;object-fit:contain!important}
+.mw-logo{font-size:20px!important;letter-spacing:2.6px!important;color:#4eb6ff!important}.mw-logo span{color:#4eb6ff!important}
+.mw-focus{font-size:14px!important;color:#9fd5ff!important;letter-spacing:.5px!important}
+.mw-byline{font:italic 14px Georgia,serif;color:#e7edf5}.mw-status{font-size:12px!important;color:#62e6a5!important}
+.mw-v20-tagline{padding:9px 18px!important}.mw-tagline-copy span{font-size:14px!important;letter-spacing:1.7px!important;color:#8ed0ff!important}.mw-tagline-copy .mw-community-invite{font-size:13px!important;margin-top:4px!important;color:#f0f5fb!important;font-weight:700!important}
+@media(max-width:650px){
+ .mw-brandbar{padding:7px 10px!important}.mw-head-line{gap:8px}.mw-head-line-1{min-height:47px}.mw-head-line-2{min-height:25px;padding-left:0}
+ .mw-live-brand img{width:43px!important;height:43px!important}.mw-logo{font-size:16px!important;letter-spacing:1.4px!important}.mw-focus{font-size:10px!important;text-align:right}.mw-byline{font-size:11px!important}.mw-status{font-size:9px!important;white-space:nowrap}
+ .mw-v20-tagline{padding:8px 10px!important}.mw-tagline-copy span{font-size:12px!important;letter-spacing:1px!important}.mw-tagline-copy .mw-community-invite{font-size:11px!important;line-height:1.35!important}
+}
