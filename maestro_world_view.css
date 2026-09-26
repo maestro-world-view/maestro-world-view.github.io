@@ -701,3 +701,20 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
 /* V20.1 compact single-brand header: logo/title live bar -> Ask Maestro -> tagline -> upload CTAs */
 .mw-live-brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}.mw-live-brand img{width:32px;height:32px;object-fit:cover;border-radius:7px;flex:0 0 auto}.mw-v20-tagline{min-height:0!important;padding:7px 18px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:#0b1828!important}.mw-tagline-copy{text-align:center;line-height:1.25;color:#b8c7d8;font-size:11px}.mw-tagline-copy em{display:block}.mw-tagline-copy span{display:block;color:#7fc9ff;letter-spacing:2px;font-size:10px}.mw-v20-tagline .mw-top-home{position:absolute;right:18px}.mw-ask-maestro{margin-top:12px!important;margin-bottom:10px!important}.mw-brandbar+.mw-ask-maestro{margin-top:12px!important}.mw-home-page .mw-top-home{display:none!important}
 @media(max-width:650px){.mw-live-brand{gap:7px}.mw-live-brand img{width:27px;height:27px;border-radius:6px}.mw-brandbar{gap:7px!important}.mw-logo{font-size:12px!important;letter-spacing:1.4px!important}.mw-focus{font-size:8px!important}.mw-status{font-size:9px!important}.mw-v20-tagline{padding:6px 10px!important}.mw-tagline-copy{font-size:9px}.mw-tagline-copy span{font-size:8px;letter-spacing:1.4px}.mw-v20-tagline .mw-top-home{right:8px}}
+
+/* V20.2 compact universal header refinements */
+.mw-logo,.mw-logo span{color:#4eb6ff!important}
+.mw-live-brand img{width:42px!important;height:42px!important;background:#000!important;padding:2px!important;border-radius:9px!important;object-fit:contain!important}
+.mw-logo{font-size:19px!important;letter-spacing:2.8px!important;white-space:nowrap}
+.mw-focus{font-size:13px!important}
+.mw-status{font-size:12px!important}
+.mw-tagline-copy{font-size:13px!important;line-height:1.3!important}
+.mw-tagline-copy span{font-size:11px!important}
+.mw-tagline-copy .mw-community-invite{display:block;margin-top:3px;color:#dce9f7;font:600 11px Arial,sans-serif;letter-spacing:.3px}
+@media(max-width:650px){
+ .mw-live-brand img{width:36px!important;height:36px!important}
+ .mw-logo{font-size:15px!important;letter-spacing:1.7px!important}
+ .mw-focus{font-size:10px!important}.mw-status{font-size:9px!important}
+ .mw-tagline-copy{font-size:11px!important}.mw-tagline-copy span{font-size:9px!important}
+ .mw-tagline-copy .mw-community-invite{font-size:9px!important}
+}
