@@ -6,7 +6,7 @@
  window.MAESTRO_PLACE=place;
  const bar=document.createElement('div');
  bar.className='mw-brandbar';
- bar.innerHTML='<div class="mw-logo">MAESTRO <span>WORLD VIEW</span></div><div class="mw-focus">'+(place?'FOCUS: '+place.toUpperCase():'GLOBAL INTELLIGENCE')+'</div><div class="mw-status">● LIVE · 30 SEC</div>';
+ bar.innerHTML='<a class="mw-live-brand" href="index.html"><img src="logo.png" alt="Maestro World View"><div class="mw-logo">MAESTRO <span>WORLD VIEW</span></div></a><div class="mw-focus">'+(place?'FOCUS: '+place.toUpperCase():'GLOBAL INTELLIGENCE')+'</div><div class="mw-status">● LIVE · 30 SEC</div>';
  document.body.insertBefore(bar,document.body.firstChild);
  const foot=document.createElement('div');foot.className='mw-credit';foot.innerHTML='BROUGHT TO YOU BY <strong>MAESTRO WORLD VIEW</strong>';document.body.appendChild(foot);
  setTimeout(function(){location.reload()},30000);
