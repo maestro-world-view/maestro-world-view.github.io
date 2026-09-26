@@ -1,6 +1,11 @@
 (function(){
 function boot(){
  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+ const isIndexNow=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
+ if(!isIndexNow){
+   const pickers=[...document.querySelectorAll(".mw-location-picker")];
+   pickers.slice(1).forEach(x=>x.remove());
+ }
  const country=$("#mw-country"),city=$("#mw-city"),section=$("#mw-section"),keyword=$("#mw-keyword"),current=$("#mw-location-current");
  if(!country||!city)return;
  const aliases={"US":"United States","USA":"United States","U.S.":"United States","United States of America":"United States","UK":"United Kingdom","U.K.":"United Kingdom"};
@@ -102,7 +107,13 @@ function boot(){
      localStorage.setItem("mw_web_section",sec);
    }
    let all=cards(),shown=0;
-   all.forEach(x=>{let ok=wanted(x,c,ct,sec)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));x.hidden=!ok;x.style.setProperty("display",ok?"":"none","important");if(ok)shown++});
+   all.forEach(x=>{
+     let ok=wanted(x,c,ct,sec)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));
+     x.hidden=!ok;
+     x.dataset.mwLocationVisible=ok?"1":"0";
+     x.style.setProperty("display",ok?"":"none","important");
+     if(ok)shown++;
+   });
    $$(".mw-filter-empty").forEach(x=>x.remove());
    if((c||ct)&&!shown&&!(isIndexPage()&&hydrating)){let host=$(".mw-section-wrap,.wrap,main")||document.body,e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.prepend(e)}
    const isIndex=isIndexPage();

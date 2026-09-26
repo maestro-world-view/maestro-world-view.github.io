@@ -29,6 +29,14 @@
  const ask=document.querySelector('.mw-ask-maestro');
  if(ask)bar.insertAdjacentElement('afterend',ask);
 
+ // V22.5 section pages: Ask Maestro is the single main search box.
+ // Remove old generator-local search inputs; keep the one location-filter panel.
+ if(!isHome){
+   document.querySelectorAll('input#q,input.mw-search').forEach(x=>x.remove());
+   const pickers=[...document.querySelectorAll('.mw-location-picker')];
+   pickers.slice(1).forEach(x=>x.remove());
+ }
+
  // Community-only presentation remains enforced.
  const path=(location.pathname||'').toLowerCase();
  if(path.endsWith('/dating.html')||path.endsWith('/maestro_dating.html')){

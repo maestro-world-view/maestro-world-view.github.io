@@ -1232,3 +1232,13 @@ body.mw-search-active #mw-location-panel{
 }
 /* Never allow legacy visible title/byline blocks to return. */
 .mw-v21-titleblock,.mw-byline,.mw-v21-titleblock .mw-logo{display:none!important}
+
+
+/* V22.5 SECTION FILTER AUTHORITY
+   Exact country/city mismatches remain hidden even if legacy page JS touches display. */
+body:not(.mw-home-page) [data-mw-location-visible="0"]{
+ display:none!important;
+}
+body:not(.mw-home-page) .mw-location-picker ~ .mw-location-picker{
+ display:none!important;
+}
