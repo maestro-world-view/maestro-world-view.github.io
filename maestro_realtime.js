@@ -10,6 +10,10 @@
  bar.innerHTML='<div class="mw-v20-header-grid"><a class="mw-header-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a><div class="mw-head-line mw-head-line-1"><div class="mw-logo"><span>MAESTRO WORLD VIEW</span></div><div class="mw-head-actions"><div class="mw-focus">'+(place?'FOCUS: '+place.toUpperCase():'GLOBAL INTELLIGENCE')+'</div>'+(isHome?'':'<a class="mw-header-home" href="index.html">HOME</a>')+'</div></div><div class="mw-head-line mw-head-line-2"><div class="mw-byline"><em>Brought to you by Maestro World View</em></div><div class="mw-status">● LIVE · 5 MIN</div></div></div>';
  document.body.insertBefore(bar,document.body.firstChild);
  const ask=document.querySelector('.mw-ask-maestro'); if(ask) bar.insertAdjacentElement('afterend',ask);
- const foot=document.createElement('div');foot.className='mw-credit';foot.innerHTML='BROUGHT TO YOU BY <strong>MAESTRO WORLD VIEW</strong>';document.body.appendChild(foot);
+ // R9 universal footer. The disclaimer page itself receives the same footer.
+ const foot=document.createElement('footer');
+ foot.className='mw-site-footer';
+ foot.innerHTML='<div><strong>MAESTRO WORLD VIEW</strong></div><div><a href="disclaimer.html">Disclaimer</a><span aria-hidden="true"> · </span><a href="mailto:maestro.world.view@gmail.com">Inquiries: maestro.world.view@gmail.com</a></div>';
+ document.body.appendChild(foot);
  setTimeout(function(){location.reload()},300000);
 })();

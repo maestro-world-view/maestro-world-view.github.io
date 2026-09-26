@@ -786,3 +786,26 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
 body.mw-search-active .mw-v20-tagline~*:not(#mw-search-feed):not(script):not(style){display:none!important}
 body.mw-search-active #mw-search-feed{display:block!important}
 @media(max-width:760px){.mw-search-feed{width:calc(100% - 20px);margin:14px auto 24px}.mw-search-feed-toolbar{align-items:flex-start}.mw-search-feed-toolbar strong{font-size:14px}.mw-search-feed-toolbar button{font-size:10px;padding:7px 9px}.mw-search-feed-row h3{font-size:18px!important}.mw-search-feed-row p{font-size:13px!important}}
+
+/* =====================================================================
+   V20 SEARCH R9 — larger logo, simplified post-search area, universal footer
+   ===================================================================== */
+/* Hide the "A More Connected World" / invitation copy under Ask Maestro.
+   Upload CTAs remain visible because they are separate controls. */
+.mw-v20-tagline .mw-tagline-copy{display:none!important}
+.mw-v20-tagline{min-height:0!important;padding:7px 12px!important}
+/* logo1.png is intentionally much taller on desktop; preserve aspect ratio. */
+.mw-v20-header-grid{grid-template-columns:230px minmax(0,1fr)!important}
+.mw-header-logo img{width:220px!important;height:220px!important;max-width:220px!important;object-fit:contain!important;border-radius:12px!important}
+.mw-v20-header-grid .mw-head-line-1{min-height:130px!important}
+.mw-v20-header-grid .mw-head-line-2{min-height:90px!important}
+.mw-site-footer{margin-top:34px;padding:24px 18px 28px;border-top:1px solid #26364b;background:#050b12;color:#aebdce;text-align:center;font:13px/1.7 Arial,sans-serif}
+.mw-site-footer strong{color:#f4f7fb;letter-spacing:1.2px}.mw-site-footer a{color:#6bc7ff;text-decoration:none}.mw-site-footer a:hover{text-decoration:underline}
+body.mw-search-active .mw-site-footer{display:block!important}
+@media(max-width:650px){
+ .mw-v20-header-grid{grid-template-columns:125px minmax(0,1fr)!important;column-gap:8px!important}
+ .mw-header-logo img{width:120px!important;height:120px!important;max-width:120px!important;padding:1px!important}
+ .mw-v20-header-grid .mw-head-line-1{min-height:72px!important}
+ .mw-v20-header-grid .mw-head-line-2{min-height:48px!important}
+ .mw-site-footer{font-size:12px;padding:20px 10px 24px}
+}
