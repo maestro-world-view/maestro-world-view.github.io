@@ -748,3 +748,25 @@ body,.wrap,.mw-section-wrap,.mw-editorial-section,.mw-top-stories,.mw-featured,.
  .mw-live-brand img{width:56px!important;height:56px!important;padding:3px!important}.mw-logo{font-size:16px!important;letter-spacing:1.25px!important}
  .mw-head-actions{gap:7px}.mw-focus{font-size:9px!important}.mw-header-home{padding:6px 8px;font-size:9px!important}.mw-byline{font-size:12px!important}.mw-status{font-size:9px!important}
 }
+\n/* V20.5 header grid: logo spans both title rows on desktop and mobile */
+.mw-brandbar{background:#000!important;padding:8px 3%!important}
+.mw-v20-header-grid{display:grid!important;grid-template-columns:86px minmax(0,1fr)!important;grid-template-rows:auto auto!important;column-gap:14px!important;align-items:stretch!important;width:100%!important;background:#000!important}
+.mw-header-logo{grid-column:1!important;grid-row:1 / 3!important;display:flex!important;align-items:center!important;justify-content:center!important;background:#000!important;text-decoration:none!important}
+.mw-header-logo img{display:block!important;width:78px!important;height:78px!important;max-width:none!important;object-fit:contain!important;background:#000!important;padding:3px!important;border:0!important;border-radius:12px!important;box-sizing:border-box!important}
+.mw-v20-header-grid .mw-head-line{grid-column:2!important;min-width:0!important;padding-left:0!important;background:#000!important}
+.mw-v20-header-grid .mw-head-line-1{grid-row:1!important;min-height:48px!important}
+.mw-v20-header-grid .mw-head-line-2{grid-row:2!important;min-height:32px!important;border-top:1px solid rgba(80,150,210,.12)!important}
+.mw-v20-header-grid .mw-logo{font-size:22px!important;letter-spacing:2.5px!important}
+.mw-v20-header-grid .mw-byline{font-size:15px!important;margin:0!important}
+@media(max-width:650px){
+ .mw-brandbar{padding:6px 7px!important}
+ .mw-v20-header-grid{grid-template-columns:68px minmax(0,1fr)!important;column-gap:9px!important}
+ .mw-header-logo img{width:64px!important;height:64px!important;padding:2px!important;border-radius:10px!important}
+ .mw-v20-header-grid .mw-head-line-1{min-height:37px!important;gap:5px!important}
+ .mw-v20-header-grid .mw-head-line-2{min-height:29px!important;padding-left:0!important;gap:5px!important}
+ .mw-v20-header-grid .mw-logo{font-size:16px!important;letter-spacing:1.25px!important;white-space:normal!important;line-height:1.05!important}
+ .mw-v20-header-grid .mw-byline{font-size:11.5px!important;line-height:1.15!important;white-space:normal!important}
+ .mw-v20-header-grid .mw-status{font-size:8.5px!important;white-space:nowrap!important}
+ .mw-v20-header-grid .mw-focus{font-size:8.5px!important;white-space:nowrap!important}
+ .mw-v20-header-grid .mw-header-home{padding:5px 6px!important;font-size:8px!important}
+}
