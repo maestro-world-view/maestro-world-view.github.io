@@ -9,9 +9,10 @@
  const isHome=/\/(?:index\.html)?$/.test(location.pathname)||location.pathname==='/' ;
  const bar=document.createElement('header');
  bar.className='mw-brandbar mw-v212-brandbar mw-v214-brandbar';
- bar.innerHTML='<div class="mw-v212-header mw-v214-header">'
-   +'<div class="mw-v214-logo-line"><a class="mw-v212-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a>'
-   +'<div class="mw-v214-right">'+(isHome?'':'<a class="mw-v212-home" href="index.html">HOME</a>')+'<span class="mw-v212-live">● LIVE · 5 MIN</span></div></div>'
+ bar.innerHTML='<div class="mw-v218-header">'
+   +'<div class="mw-v218-spacer" aria-hidden="true"></div>'
+   +'<a class="mw-v218-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a>'
+   +'<div class="mw-v218-controls">'+(isHome?'':'<a class="mw-v218-home" href="index.html">HOME</a>')+'<span class="mw-v218-live">● LIVE · 5 MIN</span></div>'
    +'</div>';
  document.body.insertBefore(bar,document.body.firstChild);
 

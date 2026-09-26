@@ -958,3 +958,86 @@ body.mw-community-resume-only [data-source="harvested"]{display:none!important}
     font-size:12px!important;
   }
 }
+
+
+/* V21.8 final authoritative header: 3-column grid, no absolute positioning */
+.mw-brandbar.mw-v212-brandbar.mw-v214-brandbar{
+ display:block!important;
+ width:100%!important;
+ padding:0!important;
+ margin:0!important;
+ background:#000!important;
+ border-bottom:1px solid #233044!important;
+}
+.mw-v218-header{
+ display:grid!important;
+ grid-template-columns:minmax(220px,1fr) minmax(320px,440px) minmax(220px,1fr)!important;
+ align-items:center!important;
+ width:100%!important;
+ min-height:300px!important;
+ padding:14px 38px!important;
+ gap:20px!important;
+}
+.mw-v218-spacer{grid-column:1!important}
+.mw-v218-logo{
+ grid-column:2!important;
+ justify-self:center!important;
+ display:block!important;
+ width:440px!important;
+ max-width:100%!important;
+ margin:0!important;
+}
+.mw-v218-logo img{
+ display:block!important;
+ width:100%!important;
+ height:auto!important;
+ max-height:270px!important;
+ object-fit:contain!important;
+}
+.mw-v218-controls{
+ grid-column:3!important;
+ justify-self:end!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:flex-end!important;
+ gap:28px!important;
+ white-space:nowrap!important;
+ margin:0!important;
+ padding:0!important;
+}
+.mw-v218-home,.mw-v218-live{
+ display:inline-flex!important;
+ align-items:center!important;
+ line-height:1.2!important;
+ margin:0!important;
+ padding:0!important;
+}
+.mw-v218-home{color:#55b8ff!important;text-decoration:none!important;font-weight:800!important}
+.mw-v218-live{color:#35f0a1!important}
+@media(max-width:900px){
+ .mw-v218-header{
+  grid-template-columns:1fr auto!important;
+  min-height:220px!important;
+  padding:12px 18px!important;
+ }
+ .mw-v218-spacer{display:none!important}
+ .mw-v218-logo{grid-column:1!important;justify-self:center!important;width:min(330px,70vw)!important}
+ .mw-v218-logo img{max-height:185px!important}
+ .mw-v218-controls{grid-column:2!important;gap:16px!important;font-size:12px!important}
+}
+@media(max-width:560px){
+ .mw-v218-header{
+  grid-template-columns:1fr!important;
+  min-height:205px!important;
+  padding:12px 14px 42px!important;
+  position:relative!important;
+ }
+ .mw-v218-logo{grid-column:1!important;width:min(300px,84vw)!important}
+ .mw-v218-controls{
+  grid-column:1!important;
+  position:absolute!important;
+  right:14px!important;
+  bottom:14px!important;
+  gap:18px!important;
+ }
+}
