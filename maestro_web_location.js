@@ -8,8 +8,8 @@ function boot(){
  const norm=v=>canon(v).normalize("NFKC").trim().toLocaleLowerCase();
  const esc=v=>String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
  const uniq=a=>[...new Set(a.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
- const sectionPages={news:"news.html",sports:"sports.html",job:"job_offers.html",service:"services.html",real_estate:"real_estate.html",vehicle:"cars_motorcycles.html",art:"arts.html",dating:"dating.html",wellness:"wellness_longevity.html",science:"science.html",travel:"travel.html",politics:"politics.html",finance:"finance.html"};
- const cardSelector=".mw-story,.mw-news-hero,.mw-news-row,.mw-listing-row,.card,.dating-card";
+ const sectionPages={news:"news.html",sports:"sports.html",job:"job_offers.html",service:"services.html",real_estate:"real_estate.html",vehicle:"cars_motorcycles.html",art:"arts.html",wellness:"wellness_longevity.html",science:"science.html",travel:"travel.html",politics:"politics.html",finance:"finance.html"};
+ const cardSelector=".mw-cloud-card,.mw-story,.mw-news-hero,.mw-news-row,.mw-listing-row,.card,.dating-card";
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
  const attr=(x,k)=>((x.dataset&&x.dataset[k])||"").trim();
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
@@ -40,6 +40,50 @@ function boot(){
    const map={"News":"news","Sports":"sports","Jobs":"job","Services":"service","Real Estate":"real_estate","Motors":"vehicle","Arts":"art","Wellness":"wellness","Science":"science","Travel":"travel","Politics":"politics","Finance":"finance"};
    $$(".stats .stat").forEach(box=>{let label=(box.querySelector("span")?.textContent||"").trim(),key=map[label];if(key){let b=box.querySelector("b");if(b)b.textContent=sums[key]}});
  }
+ const isIndexPage=()=>/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
+ const stateURL=(target,c,ct,sec)=>{
+   const u=new URL(target,location.href);
+   if(c)u.searchParams.set("country",c);else u.searchParams.delete("country");
+   if(ct)u.searchParams.set("city",ct);else u.searchParams.delete("city");
+   if(sec)u.searchParams.set("section",sec);else u.searchParams.delete("section");
+   return u.href;
+ };
+ const sectionCount=(key,c,ct)=>{
+   let n=0;
+   dbLocs.forEach(r=>{
+     if(c&&norm(r.country)!==norm(c))return;
+     if(ct&&norm(r.city)!==norm(ct))return;
+     n+=Number((r.counts||{})[key])||0;
+   });
+   return n;
+ };
+ let hydrationKey="",hydrating=false;
+ async function hydrateIndex(c,ct,sec){
+   if(!isIndexPage()||(!c&&!ct)||hydrating)return;
+   const key=[norm(c),norm(ct),sec||"*"].join("|");
+   if(key===hydrationKey)return;
+   hydrationKey=key; hydrating=true;
+   try{
+     const keys=sec?[sec]:Object.keys(sectionPages);
+     for(const k of keys){
+       if(!sectionPages[k]||sectionCount(k,c,ct)<=0)continue;
+       const box=document.querySelector('.mw-live-section[data-mw-section="'+CSS.escape(k)+'"]');
+       if(!box)continue;
+       const existing=[...box.querySelectorAll(cardSelector)].some(x=>wanted(x,c,ct,k));
+       if(existing)continue;
+       const res=await fetch(sectionPages[k],{cache:"no-store"});
+       if(!res.ok)continue;
+       const doc=new DOMParser().parseFromString(await res.text(),"text/html");
+       const matches=[...doc.querySelectorAll(cardSelector)].filter(x=>wanted(x,c,ct,k)).slice(0,5);
+       matches.forEach(x=>{
+         x.querySelectorAll("script").forEach(s=>s.remove());
+         x.dataset.mwHydrated="1";
+         box.appendChild(document.importNode(x,true));
+       });
+     }
+   }catch(e){console.warn("[V21.9 LOCATION] index hydration warning",e)}
+   finally{hydrating=false;apply();}
+ }
  function apply(){
    let c=canon(country.value),ct=city.value,sec=section.value,q=(keyword?.value||"").trim().toLocaleLowerCase();
    // Dedicated pages already define their section. A stale section preference must not hide their feed.
@@ -51,16 +95,22 @@ function boot(){
    all.forEach(x=>{let ok=wanted(x,c,ct,sec)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));x.hidden=!ok;x.style.setProperty("display",ok?"":"none","important");if(ok)shown++});
    $$(".mw-filter-empty").forEach(x=>x.remove());
    if((c||ct)&&!shown){let host=$(".mw-section-wrap,.wrap,main")||document.body,e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.prepend(e)}
-   const isIndex=/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
-   if(isIndex){$$(".mw-live-section[data-mw-section]").forEach(box=>{let k=(box.dataset.mwSection||"").toLowerCase();box.hidden=!!sec&&k!==sec;box.style.setProperty("display",(!sec||k===sec)?"":"none","important")})}
+   const isIndex=isIndexPage();
+   if(isIndex){
+     $$(".mw-live-section[data-mw-section]").forEach(box=>{let k=(box.dataset.mwSection||"").toLowerCase();box.hidden=!!sec&&k!==sec;box.style.setProperty("display",(!sec||k===sec)?"":"none","important")});
+     hydrateIndex(c,ct,sec);
+   }
    updateDashboard(c,ct);
    if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")+" · "+shown+" matching items"):("Showing all available areas · "+shown+" items");
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
  country.addEventListener("change",()=>{refill();apply()});city.addEventListener("change",apply);section.addEventListener("change",apply);keyword?.addEventListener("input",apply);
- $("#mw-apply-location")?.addEventListener("click",()=>{apply();let sec=section.value;if(sec&&sectionPages[sec]){let target=sectionPages[sec],cur=(location.pathname.split("/").pop()||"index.html").toLowerCase();if(cur!==target.toLowerCase())window.open(target,"_blank","noopener")}});
+ $("#mw-apply-location")?.addEventListener("click",()=>{apply();let c=canon(country.value),ct=city.value,sec=section.value;if(sec&&sectionPages[sec]){let target=sectionPages[sec],cur=(location.pathname.split("/").pop()||"index.html").toLowerCase();if(cur!==target.toLowerCase())window.open(stateURL(target,c,ct,sec),"_blank","noopener")}});
  $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
- let sc=canon(localStorage.getItem("mw_web_country")||""),st=localStorage.getItem("mw_web_city")||"",ss=localStorage.getItem("mw_web_section")||"";
+ const params=new URLSearchParams(location.search);
+ let sc=canon(params.has("country")?params.get("country"):(localStorage.getItem("mw_web_country")||""));
+ let st=params.has("city")?params.get("city"):(localStorage.getItem("mw_web_city")||"");
+ let ss=params.has("section")?params.get("section"):(localStorage.getItem("mw_web_section")||"");
  let co=[...country.options].find(o=>norm(o.value)===norm(sc));if(co){country.value=co.value;refill()}else refill();
  let cio=[...city.options].find(o=>norm(o.value)===norm(st));if(cio)city.value=cio.value;
  if([...section.options].some(o=>o.value===ss))section.value=ss;

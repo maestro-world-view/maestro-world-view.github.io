@@ -1041,3 +1041,46 @@ body.mw-community-resume-only [data-source="harvested"]{display:none!important}
   gap:18px!important;
  }
 }
+
+
+/* V21.9 Ask Maestro results use the same image/listing geometry as normal listings */
+.mw-search-listing.mw-listing-row{
+ display:grid!important;
+ grid-template-columns:400px minmax(0,1fr)!important;
+ gap:32px!important;
+ align-items:center!important;
+ width:100%!important;
+ min-height:270px!important;
+ padding:24px!important;
+ margin:0!important;
+ border:0!important;
+ border-bottom:1px solid #2a323a!important;
+ background:#0d1011!important;
+}
+.mw-search-image{
+ width:400px!important;
+ height:270px!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ overflow:hidden!important;
+ border-radius:18px!important;
+ background:#050607!important;
+}
+.mw-search-image img{
+ display:block!important;
+ width:100%!important;
+ height:100%!important;
+ object-fit:cover!important;
+}
+.mw-search-image img[src$="logo1.png"]{
+ object-fit:contain!important;
+ padding:14px!important;
+}
+.mw-search-body{min-width:0!important}
+.mw-search-body h3{margin:6px 0 10px!important;font-size:1.45rem!important}
+.mw-search-body p{margin:0 0 14px!important;line-height:1.45!important}
+@media(max-width:760px){
+ .mw-search-listing.mw-listing-row{grid-template-columns:1fr!important;gap:14px!important;padding:16px!important}
+ .mw-search-image{width:100%!important;height:auto!important;aspect-ratio:16/9!important}
+}
