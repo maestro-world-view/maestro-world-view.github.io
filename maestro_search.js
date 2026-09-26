@@ -41,32 +41,55 @@ async function run(raw){
  setSearchMode(true);
  let l=local(q);
  out.hidden=false;
- out.innerHTML='<div class="mw-search-toolbar"><strong>RESULTS FOR “'+esc(raw.trim())+'”</strong><button type="button" id="mw-clear-search">CLEAR SEARCH</button></div><div class="mw-web-wait">Searching Maestro database and web…</div>';
+ out.innerHTML='<div class="mw-search-toolbar"><strong>RESULTS FOR “'+esc(raw.trim())+'”</strong><button type="button" id="mw-clear-search">CLEAR SEARCH</button></div><div class="mw-web-wait">Searching the web and Maestro database…</div>';
  document.querySelector('#mw-clear-search')?.addEventListener('click',clearSearch);
 
- let global=await maestroGlobal(q);
- // De-duplicate global DB rows against records already visible in the current page.
- let seen=new Set([...l.community,...l.harvested].map(x=>norm(x.title)+'|'+norm(x.url)));
- global=global.filter(x=>{let k=norm(x.title)+'|'+norm(x.url);if(seen.has(k))return false;seen.add(k);return true});
+ // Run global Maestro DB and web search together.
+ // The web provider already ranks results for the query, so do NOT throw away provider-returned
+ // rows merely because the exact full query string is absent from title/snippet.
+ let globalPromise=maestroGlobal(q);
+ let webPromise=(async()=>{
+   try{
+     let r=await fetch(API()+'/api/search?q='+encodeURIComponent(raw.trim()),{cache:'no-store'});
+     if(!r.ok)return[];
+     let j=await r.json();
+     return Array.isArray(j.results)?j.results:[];
+   }catch(e){return[]}
+ })();
 
+ let [global,web]=await Promise.all([globalPromise,webPromise]);
+
+ // De-duplicate Maestro DB rows against records already present on the open page.
+ let seenDb=new Set([...l.community,...l.harvested].map(x=>norm(x.title)+'|'+norm(x.url)));
+ global=global.filter(x=>{
+   let k=norm(x.title)+'|'+norm(x.url);
+   if(seenDb.has(k))return false;
+   seenDb.add(k);return true;
+ });
+
+ // Preserve every distinct web row returned by the web-search provider.
+ // Prefer URL as the identity; fall back to title+description when URL is unavailable.
+ let seenWeb=new Set();
+ web=web.filter(x=>{
+   let k=norm(x.url)||norm(x.title)+'|'+norm(x.description);
+   if(!k||seenWeb.has(k))return false;
+   seenWeb.add(k);return true;
+ });
+
+ // Required order on ALL pages:
+ // 1. WEB RESULTS
+ // 2. MAESTRO DATABASE / harvested public records
+ // 3. MAESTRO COMMUNITY / uploaded records
  out.innerHTML='<div class="mw-search-toolbar"><strong>RESULTS FOR “'+esc(raw.trim())+'”</strong><button type="button" id="mw-clear-search">CLEAR SEARCH</button></div>'
-   +group('MAESTRO COMMUNITY',l.community,'community')
+   +group('WEB RESULTS',web,'web')
    +group('MAESTRO DATABASE',[...l.harvested,...global],'harvested')
-   +'<div class="mw-web-wait">Searching the web…</div>';
+   +group('MAESTRO COMMUNITY',l.community,'community');
+
  document.querySelector('#mw-clear-search')?.addEventListener('click',clearSearch);
 
- try{
-   let r=await fetch(API()+'/api/search?q='+encodeURIComponent(raw.trim()),{cache:'no-store'}),j=r.ok?await r.json():{};
-   out.querySelector('.mw-web-wait')?.remove();
-   let web=(j.results||[]).filter(x=>strictMatches(x,q));
-   let html=group('WEB RESULTS',web,'web');if(html)out.insertAdjacentHTML('beforeend',html);
-   if(!l.community.length&&!l.harvested.length&&!global.length&&!web.length)
-     out.insertAdjacentHTML('beforeend','<p class="mw-search-empty">No results found for “'+esc(raw.trim())+'”.</p>');
- }catch{
-   out.querySelector('.mw-web-wait')?.remove();
-   if(!l.community.length&&!l.harvested.length&&!global.length)
-     out.insertAdjacentHTML('beforeend','<p class="mw-search-empty">No Maestro matches found. Web search is temporarily unavailable.</p>');
- }
+ if(!web.length&&!l.harvested.length&&!global.length&&!l.community.length)
+   out.insertAdjacentHTML('beforeend','<p class="mw-search-empty">No results found for “'+esc(raw.trim())+'”.</p>');
+
  out.scrollIntoView({behavior:'smooth',block:'start'})
 }
 document.addEventListener('DOMContentLoaded',()=>{ensure();let f=document.querySelector('#mw-ask-form'),i=document.querySelector('#mw-ask-input');f?.addEventListener('submit',e=>{e.preventDefault();run(i.value)});i?.addEventListener('search',()=>{if(!i.value.trim())clearSearch()});});
