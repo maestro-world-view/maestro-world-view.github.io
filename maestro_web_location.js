@@ -67,7 +67,7 @@ function boot(){
      const keys=sec?[sec]:Object.keys(sectionPages);
      for(const k of keys){
        if(!sectionPages[k]||sectionCount(k,c,ct)<=0)continue;
-       const box=document.querySelector('.mw-live-section[data-mw-section="'+CSS.escape(k)+'"]');
+       const box=document.querySelector('[data-mw-section="'+CSS.escape(k)+'"].mw-editorial-section,[data-mw-section="'+CSS.escape(k)+'"].mw-live-section');
        if(!box)continue;
        const existing=[...box.querySelectorAll(cardSelector)].some(x=>wanted(x,c,ct,k));
        if(existing)continue;
@@ -84,6 +84,7 @@ function boot(){
          x.dataset.mwHydrated="1";
          x.dataset.type=k;
          box.appendChild(document.importNode(x,true));
+         document.querySelectorAll(".mw-filter-empty").forEach(e=>e.remove());
        });
      }
    }catch(e){console.warn("[V21.9 LOCATION] index hydration warning",e)}
@@ -103,10 +104,10 @@ function boot(){
    let all=cards(),shown=0;
    all.forEach(x=>{let ok=wanted(x,c,ct,sec)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));x.hidden=!ok;x.style.setProperty("display",ok?"":"none","important");if(ok)shown++});
    $$(".mw-filter-empty").forEach(x=>x.remove());
-   if((c||ct)&&!shown){let host=$(".mw-section-wrap,.wrap,main")||document.body,e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.prepend(e)}
+   if((c||ct)&&!shown&&!(isIndexPage()&&hydrating)){let host=$(".mw-section-wrap,.wrap,main")||document.body,e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.prepend(e)}
    const isIndex=isIndexPage();
    if(isIndex){
-     $$(".mw-live-section[data-mw-section]").forEach(box=>{let k=(box.dataset.mwSection||"").toLowerCase();box.hidden=!!sec&&k!==sec;box.style.setProperty("display",(!sec||k===sec)?"":"none","important")});
+     $$(".mw-editorial-section[data-mw-section],.mw-live-section[data-mw-section]").forEach(box=>{let k=(box.dataset.mwSection||"").toLowerCase();box.hidden=!!sec&&k!==sec;box.style.setProperty("display",(!sec||k===sec)?"":"none","important")});
      hydrateIndex(c,ct,sec);
    }
    updateDashboard(c,ct);

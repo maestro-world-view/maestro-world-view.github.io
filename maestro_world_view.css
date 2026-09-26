@@ -1159,3 +1159,76 @@ body.mw-search-active #mw-location-panel{
  visibility:visible!important;
  opacity:1!important;
 }
+
+
+/* V22.4 authoritative masthead — logo1 only, centered, no legacy title/byline */
+.mw-brandbar.mw-v224-brandbar{
+ display:block!important;
+ width:100%!important;
+ margin:0!important;
+ padding:0!important;
+ background:#000!important;
+ border-bottom:1px solid #233044!important;
+}
+.mw-v224-header{
+ display:grid!important;
+ grid-template-columns:minmax(220px,1fr) minmax(360px,500px) minmax(220px,1fr)!important;
+ align-items:center!important;
+ width:100%!important;
+ min-height:300px!important;
+ padding:12px 38px!important;
+ gap:20px!important;
+ box-sizing:border-box!important;
+}
+.mw-v224-spacer{grid-column:1!important}
+.mw-v224-logo{
+ grid-column:2!important;
+ justify-self:center!important;
+ display:block!important;
+ width:500px!important;
+ max-width:100%!important;
+ height:auto!important;
+ margin:0!important;
+ background:transparent!important;
+}
+.mw-v224-logo img{
+ display:block!important;
+ width:100%!important;
+ height:auto!important;
+ max-height:275px!important;
+ object-fit:contain!important;
+ padding:0!important;
+ margin:0!important;
+ border:0!important;
+ border-radius:0!important;
+ background:#000!important;
+}
+.mw-v224-controls{
+ grid-column:3!important;
+ justify-self:end!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:flex-end!important;
+ gap:28px!important;
+ white-space:nowrap!important;
+}
+.mw-v224-home{
+ color:#55b8ff!important;
+ text-decoration:none!important;
+ font-weight:800!important;
+}
+.mw-v224-live{color:#35f0a1!important}
+@media(max-width:900px){
+ .mw-v224-header{grid-template-columns:1fr auto!important;min-height:220px!important;padding:12px 18px!important}
+ .mw-v224-spacer{display:none!important}
+ .mw-v224-logo{grid-column:1!important;width:min(350px,70vw)!important}
+ .mw-v224-logo img{max-height:190px!important}
+ .mw-v224-controls{grid-column:2!important;gap:16px!important;font-size:12px!important}
+}
+@media(max-width:560px){
+ .mw-v224-header{grid-template-columns:1fr!important;min-height:205px!important;padding:12px 14px 42px!important;position:relative!important}
+ .mw-v224-logo{grid-column:1!important;width:min(310px,84vw)!important}
+ .mw-v224-controls{grid-column:1!important;position:absolute!important;right:14px!important;bottom:14px!important;gap:18px!important}
+}
+/* Never allow legacy visible title/byline blocks to return. */
+.mw-v21-titleblock,.mw-byline,.mw-v21-titleblock .mw-logo{display:none!important}
