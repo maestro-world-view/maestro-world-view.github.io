@@ -1084,3 +1084,59 @@ body.mw-community-resume-only [data-source="harvested"]{display:none!important}
  .mw-search-listing.mw-listing-row{grid-template-columns:1fr!important;gap:14px!important;padding:16px!important}
  .mw-search-image{width:100%!important;height:auto!important;aspect-ratio:16/9!important}
 }
+
+
+/* V22 authoritative Ask Maestro search presentation */
+.mw-ask-maestro,
+.mw-search-results,
+.mw-search-results[hidden="false"],
+.mw-search-group,
+.mw-search-toolbar,
+body.mw-search-active .mw-ask-maestro{
+ background:#000!important;
+ color:#f5f7fa!important;
+}
+.mw-search-results{
+ display:block;
+ width:min(1540px,calc(100% - 48px))!important;
+ margin:0 auto 28px!important;
+ padding:18px 0 28px!important;
+ border:0!important;
+ box-shadow:none!important;
+}
+.mw-search-results[hidden]{display:none!important}
+.mw-search-toolbar{
+ display:flex!important;
+ align-items:center!important;
+ justify-content:space-between!important;
+ gap:18px!important;
+ padding:0 0 16px!important;
+ border-bottom:1px solid #263442!important;
+}
+.mw-search-toolbar button{
+ background:#10283a!important;color:#fff!important;border:1px solid #37607d!important;
+ border-radius:999px!important;padding:10px 18px!important;font-weight:800!important;
+}
+.mw-search-group{padding:0!important;margin:18px 0 0!important}
+.mw-search-group>h2{
+ color:#55c9ff!important;border-bottom:1px solid #263442!important;
+ padding:0 0 14px!important;margin:0!important;
+}
+.mw-search-listing.mw-listing-row{
+ background:#0b0f11!important;color:#f5f7fa!important;
+ border-bottom:1px solid #263442!important;
+}
+.mw-search-body p,.mw-search-body h3,.mw-search-body h3 a{color:#f5f7fa!important}
+.mw-search-source,.mw-search-open{color:#55c9ff!important}
+body.mw-search-active .mw-brandbar,
+body.mw-search-active .mw-ask-maestro,
+body.mw-search-active .mw-upload-actions,
+body.mw-search-active .mw-upload-row,
+body.mw-search-active .mw-location-shell,
+body.mw-search-active .mw-world-filter,
+body.mw-search-active .mw-local-world-view,
+body.mw-search-active [id*="location"],
+body.mw-search-active [class*="location"]{
+ display:revert!important;
+ visibility:visible!important;
+}
