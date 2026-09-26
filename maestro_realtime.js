@@ -5,19 +5,21 @@
  window.MAESTRO_PLACE=incoming||localStorage.getItem('maestro_place')||'';
 
  // Remove any generator/legacy masthead before inserting the single V22.4 masthead.
- document.querySelectorAll('.mw-brandbar,.mw-masthead,.mw-v20-head,.mw-v21-header').forEach(x=>x.remove());
-
  const isHome=/\/(?:index\.html)?$/.test(location.pathname)||location.pathname==='/';
  document.body.classList.toggle('mw-home-page',isHome);
  document.body.classList.toggle('mw-section-page',!isHome);
- const bar=document.createElement('header');
- bar.className='mw-brandbar mw-v224-brandbar';
- bar.innerHTML='<div class="mw-v224-header">'
-   +'<div class="mw-v224-spacer" aria-hidden="true"></div>'
-   +'<a class="mw-v224-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a>'
-   +'<div class="mw-v224-controls">'+(isHome?'':'<a class="mw-v224-home" href="index.html">HOME</a>')+'<span class="mw-v224-live">● LIVE · 5 MIN</span></div>'
-   +'</div>';
- document.body.insertBefore(bar,document.body.firstChild);
+ document.querySelectorAll('.mw-masthead,.mw-v20-head,.mw-v21-header').forEach(x=>x.remove());
+ let bar=document.querySelector('.mw-brandbar.mw-v224-brandbar');
+ if(!bar){
+   bar=document.createElement('header');
+   bar.className='mw-brandbar mw-v224-brandbar';
+   bar.innerHTML='<div class="mw-v224-header">'
+     +'<div class="mw-v224-spacer" aria-hidden="true"></div>'
+     +'<a class="mw-v224-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a>'
+     +'<div class="mw-v224-controls">'+(isHome?'':'<a class="mw-v224-home" href="index.html">HOME</a>')+'<span class="mw-v224-live">● LIVE · 5 MIN</span></div>'
+     +'</div>';
+   document.body.insertBefore(bar,document.body.firstChild);
+ }
 
  bar.querySelectorAll('.mw-v224-home,.mw-v224-logo').forEach(a=>a.addEventListener('click',()=>{
    try{

@@ -1266,3 +1266,8 @@ body.mw-section-page .mw-ask-maestro .mw-ask-form{
  width:min(1300px,calc(100% - 48px))!important;
  margin:0 auto!important;
 }
+
+/* V22.8 static section masthead failsafe */
+body.mw-section-page > .mw-brandbar.mw-v224-brandbar{
+ display:block!important;visibility:visible!important;opacity:1!important;
+}
