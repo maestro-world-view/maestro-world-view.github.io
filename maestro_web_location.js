@@ -13,6 +13,8 @@ function boot(){
  const norm=v=>canon(v).normalize("NFKC").trim().toLocaleLowerCase();
  const esc=v=>String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
  const uniq=a=>[...new Set(a.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ const ALL_COUNTRIES=["Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bonaire, Sint Eustatius and Saba", "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo", "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Curaçao", "Cyprus", "Czechia", "Côte d"Ivoire", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Falkland Islands (Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Holy See (Vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States of", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "North Korea", "North Macedonia", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Romania", "Russia", "Rwanda", "Réunion", "Saint Barthélemy", "Saint Helena, Ascension and Tristan da Cunha", "Saint Kitts and Nevis", "Saint Lucia", "Saint Martin (French part)", "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten (Dutch part)", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and the South Sandwich Islands", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard and Jan Mayen", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Türkiye", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands, British", "Virgin Islands, U.S.", "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe", "Åland Islands"];
+
  const sectionPages={news:"news.html",sports:"sports.html",job:"job_offers.html",service:"services.html",real_estate:"real_estate.html",vehicle:"cars_motorcycles.html",art:"arts.html",wellness:"wellness_longevity.html",science:"science.html",travel:"travel.html",politics:"politics.html",finance:"finance.html"};
  const cardSelector=".mw-cloud-card,.mw-story,.mw-news-hero,.mw-news-row,.mw-listing-row,.card,.dating-card";
  const cards=()=>$$ (cardSelector).filter(x=>!x.closest(".mw-global-card"));
@@ -20,9 +22,29 @@ function boot(){
  const field=(x,k)=>k==="country"?canon(attr(x,k)):attr(x,k);
  // V19.1: full DB-backed metadata, not the small preview-card set.
  const dbLocs=Array.isArray(window.MAESTRO_DB_LOCATIONS)?window.MAESTRO_DB_LOCATIONS:[];
- function pairs(){let a=dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()}));cards().forEach(x=>{let c=field(x,"country"),ct=field(x,"city");if(c)a.push({country:c,city:ct})});return a}
+ const communityLocs=[];
+ const addCommunityLoc=(country,city)=>{
+   country=canon(country);city=(city||"").trim();
+   if(!country)return;
+   if(!communityLocs.some(x=>norm(x.country)===norm(country)&&norm(x.city)===norm(city)))communityLocs.push({country,city});
+ };
+ function pairs(){let a=dbLocs.map(x=>({country:canon(x.country),city:(x.city||"").trim()})).concat(communityLocs);cards().forEach(x=>{let c=field(x,"country"),ct=field(x,"city");if(c)a.push({country:c,city:ct})});return a}
  function setopts(sel,a,label){let old=sel.value;sel.innerHTML='<option value="">'+label+'</option>'+a.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join("");let hit=[...sel.options].find(o=>norm(o.value)===norm(old));if(hit)sel.value=hit.value}
- setopts(country,uniq(pairs().map(x=>x.country)),"All countries");
+ setopts(country,uniq(ALL_COUNTRIES.concat(pairs().map(x=>x.country))),"All countries");
+ async function loadCommunityLocations(){
+   const base=String(window.MAESTRO_SUBMISSION_API||"").replace(/\/$/,"");
+   const paths=["/api/resumes","/api/dating"].concat(["news","sports","job","service","real_estate","vehicle","art","wellness","science","travel","politics","finance"].map(x=>"/api/listings/"+x));
+   try{
+     const batches=await Promise.all(paths.map(async p=>{try{let r=await fetch(base+p,{cache:"no-store"});return r.ok?await r.json():[]}catch(e){return[]}}));
+     batches.flat().forEach(x=>addCommunityLoc(x&&x.country,x&&x.city));
+     let oldC=country.value,oldCity=city.value;
+     setopts(country,uniq(ALL_COUNTRIES.concat(pairs().map(x=>x.country))),"All countries");
+     let hit=[...country.options].find(o=>norm(o.value)===norm(oldC));if(hit)country.value=hit.value;
+     refill();
+     let chit=[...city.options].find(o=>norm(o.value)===norm(oldCity));if(chit)city.value=chit.value;
+     apply();
+   }catch(e){console.warn("[V23 COMMUNITY LOCATIONS] metadata warning",e)}
+ }
  function refill(){let c=canon(country.value);setopts(city,uniq(pairs().filter(x=>!c||norm(x.country)===norm(c)).map(x=>x.city)),"All cities / areas")}
  function type(x){let v=attr(x,"type")||attr(x,"category");if(v)return v.toLowerCase();let p=location.pathname.toLowerCase();if(p.includes("news"))return"news";if(p.includes("sports"))return"sports";if(p.includes("job"))return"job";if(p.includes("services"))return"service";if(p.includes("real_estate"))return"real_estate";if(p.includes("cars_motorcycles"))return"vehicle";if(p.includes("arts"))return"art";if(p.includes("dating"))return"dating";if(p.includes("wellness"))return"wellness";if(p.includes("science"))return"science";if(p.includes("travel"))return"travel";if(p.includes("politics"))return"politics";if(p.includes("finance"))return"finance";return""}
  function wanted(x,c,ct,sec){return (!c||norm(field(x,"country"))===norm(c))&&(!ct||norm(field(x,"city"))===norm(ct))&&(!sec||type(x)===sec)}
@@ -142,8 +164,9 @@ function boot(){
  let co=[...country.options].find(o=>norm(o.value)===norm(sc));if(co){country.value=co.value;refill()}else refill();
  let cio=[...city.options].find(o=>norm(o.value)===norm(st));if(cio)city.value=cio.value;
  if([...section.options].some(o=>o.value===ss))section.value=ss;
- document.addEventListener("maestro:cloud-updated",()=>{let oldC=country.value,oldCity=city.value;setopts(country,uniq(pairs().map(x=>x.country)),"All countries");let hit=[...country.options].find(o=>norm(o.value)===norm(oldC));if(hit)country.value=hit.value;refill();let chit=[...city.options].find(o=>norm(o.value)===norm(oldCity));if(chit)city.value=chit.value;apply()});
+ document.addEventListener("maestro:cloud-updated",()=>{let oldC=country.value,oldCity=city.value;setopts(country,uniq(ALL_COUNTRIES.concat(pairs().map(x=>x.country))),"All countries");let hit=[...country.options].find(o=>norm(o.value)===norm(oldC));if(hit)country.value=hit.value;refill();let chit=[...city.options].find(o=>norm(o.value)===norm(oldCity));if(chit)city.value=chit.value;apply()});
  apply();
+ loadCommunityLocations();
  // Other Maestro scripts may touch card display. Reassert exact location filtering after DOM mutations.
  let pending=false;
  new MutationObserver(()=>{if(pending)return;pending=true;setTimeout(()=>{pending=false;apply()},50)}).observe(document.body,{childList:true,subtree:true});
