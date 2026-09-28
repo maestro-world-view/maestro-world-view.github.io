@@ -37,3 +37,55 @@ window.refreshCloudDashboardCounts=refreshCloudDashboardCounts;
 document.addEventListener("DOMContentLoaded",()=>{refreshCloudDashboardCounts();setInterval(refreshCloudDashboardCounts,30000)});
 
 })();
+
+
+/* V24.45: add community-upload totals to MY WORLD counts without changing
+   the generated/local DB baseline. Safe to run repeatedly. */
+(function(){
+  const API=()=>String(window.MAESTRO_SUBMISSION_API||"").replace(/\/+$/,"");
+  const defs=[
+    ["News","/api/listings/news"],["Sports","/api/listings/sports"],
+    ["Jobs","/api/listings/job"],["Services","/api/listings/service"],
+    ["Real Estate","/api/listings/real_estate"],["Motors","/api/listings/vehicle"],
+    ["Arts","/api/listings/art"],["Wellness","/api/listings/wellness"],
+    ["Science","/api/listings/science"],["Travel","/api/listings/travel"],
+    ["Politics","/api/listings/politics"],["Finance","/api/listings/finance"],
+    ["Public Events / Notices","/api/listings/public_events"],
+    ["Freelance / Remote Work","/api/listings/freelance"],
+    ["Gaming","/api/listings/gaming"],["Tech & AI","/api/listings/tech_ai"],
+    ["Property Rentals","/api/listings/property_rental"],
+    ["Trending Videos","/api/listings/video"],["Trending Music","/api/listings/music"],
+    ["Resume Bank","/api/resumes"],["Dating","/api/dating"]
+  ];
+  function cards(label){
+    return [...document.querySelectorAll('.mw-bottom-dashboard .stat')].filter(
+      el=>String(el.dataset.countKey||"").trim()===label
+    );
+  }
+  function apply(label,community){
+    cards(label).forEach(el=>{
+      if(el.dataset.localTotal===undefined){
+        const b=el.querySelector("b");
+        el.dataset.localTotal=String(Number(el.dataset.total||b?.textContent||0)||0);
+      }
+      const total=(Number(el.dataset.localTotal)||0)+(Number(community)||0);
+      el.dataset.total=String(total);
+      const b=el.querySelector("b"); if(b)b.textContent=String(total);
+    });
+  }
+  async function refresh(){
+    const base=API(); if(!base)return;
+    await Promise.all(defs.map(async ([label,path])=>{
+      try{
+        const r=await fetch(base+path,{cache:"no-store"});
+        if(!r.ok)return;
+        const a=await r.json();
+        if(Array.isArray(a))apply(label,a.length);
+      }catch(_){}
+    }));
+  }
+  window.refreshMaestroCommunityCounts=refresh;
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh);
+  else refresh();
+})();
+
