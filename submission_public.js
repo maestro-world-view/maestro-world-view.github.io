@@ -23,35 +23,40 @@ window.loadSubmittedListings=async function(section){let a=await g("/api/listing
 window.loadSubmittedResumes=async()=>{let h=document.querySelector("#submitted-resumes");if(!h)return;let a=await g("/api/resumes");h.innerHTML=a.map(x=>{let text=String(x.resume_text||"");let summary=(text.match(/Summary:\s*([^\n]+)/i)||[])[1]||(text.match(/Experience:\s*([^\n]+)/i)||[])[1]||"Professional profile";let skills=(text.match(/Skills:\s*([^\n]+)/i)||[])[1]||"";let link=`community_article.html?id=${encodeURIComponent(x.id||"")}&type=resume`;return `<article class="card mw-story mw-cloud-card" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="resume" data-role="${e([x.job_title,x.profession,x.organization].filter(Boolean).join(" "))}" data-skills="${e(text)}">${x.profile_image_url?`<img class="mw-feed-image" src="${e(abs(x.profile_image_url))}" alt="">`:""}<div><div class="src"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span></div><h2>${e([x.first_name,x.last_name].filter(Boolean).join(" "))}</h2><h3>${e(x.job_title||x.profession||"Professional profile")}</h3>${x.organization||x.city||x.country?`<div class="facts">${e([x.organization,x.city,x.country].filter(Boolean).join(" · "))}</div>`:""}<p>${e(summary)}</p>${skills?`<div class="facts"><strong>Skills:</strong> ${e(skills)}</div>`:""}${x.email?`<div class="contact"><strong>Email:</strong> ${e(x.email)}</div>`:""}<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a></div></article>`}).join("");notify()};
 window.loadSubmittedDating=async()=>{let h=document.querySelector("#submitted-dating");if(!h)return;let a=await g("/api/dating");h.innerHTML=a.map(x=>{let bio=String(x.bio||"");let gender=(bio.match(/Gender:\s*([^\n]+)/i)||[])[1]||"",goal=(bio.match(/Relationship goal:\s*([^\n]+)/i)||[])[1]||"",occupation=(bio.match(/Occupation:\s*([^\n]+)/i)||[])[1]||"";let link=`community_article.html?id=${encodeURIComponent(x.id||"")}&type=dating`;return `<article class="dating-card mw-story mw-cloud-card" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="dating" data-age="${e(x.age||"")}" data-gender="${e(gender)}" data-goal="${e(goal)}">${x.photo_url?`<img class="mw-feed-image" src="${e(abs(x.photo_url))}" alt="">`:""}<div class="dating-copy"><div class="src"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span></div><h2>${e(x.display_name||"Dating profile")}${x.age?`, ${e(x.age)}`:""}</h2><h3>${e(x.headline||occupation||"Dating profile")}</h3><div class="facts">${e([x.city,x.country,gender,goal].filter(Boolean).join(" · "))}</div><p>${e(bio.length>320?bio.slice(0,317).trimEnd()+"…":bio)}</p>${x.contact_email?`<div class="contact"><strong>Email:</strong> ${e(x.contact_email)}</div>`:""}<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a></div></article>`}).join("");notify()};
 async function refreshCloudDashboardCounts(){
- try{
-  const defs=[
-   ["News","/api/listings/news",true],["Sports","/api/listings/sports",true],
-   ["Jobs","/api/listings/job",true],["Services","/api/listings/service",true],
-   ["Real Estate","/api/listings/real_estate",true],["Motors","/api/listings/vehicle",true],
-   ["Arts","/api/listings/art",true],["Wellness","/api/listings/wellness",true],
-   ["Science","/api/listings/science",true],["Travel","/api/listings/travel",true],
-   ["Politics","/api/listings/politics",true],["Finance","/api/listings/finance",true],
-   ["Public Events / Notices","/api/listings/public_events",true],
-   ["Freelance / Remote Work","/api/listings/freelance",true],
-   ["Gaming","/api/listings/gaming",true],["Tech & AI","/api/listings/tech_ai",true],
-   ["Property Rentals","/api/listings/property_rental",true],
-   ["Trending Videos","/api/listings/video",true],["Trending Music","/api/listings/music",true],
-   ["Resume Bank","/api/resumes",false],["Dating","/api/dating",false]
-  ];
-  const vals=await Promise.all(defs.map(async d=>{const a=await g(d[1]);return[d[0],Array.isArray(a)?a.length:0,d[2]]}));
-  vals.forEach(([key,n,add])=>{
+ const defs=[
+  ["News","/api/listings/news",true],["Sports","/api/listings/sports",true],
+  ["Jobs","/api/listings/job",true],["Services","/api/listings/service",true],
+  ["Real Estate","/api/listings/real_estate",true],["Motors","/api/listings/vehicle",true],
+  ["Arts","/api/listings/art",true],["Wellness","/api/listings/wellness",true],
+  ["Science","/api/listings/science",true],["Travel","/api/listings/travel",true],
+  ["Politics","/api/listings/politics",true],["Finance","/api/listings/finance",true],
+  ["Public Events / Notices","/api/listings/public_events",true],
+  ["Freelance / Remote Work","/api/listings/freelance",true],
+  ["Gaming","/api/listings/gaming",true],["Tech & AI","/api/listings/tech_ai",true],
+  ["Property Rentals","/api/listings/property_rental",true],
+  ["Trending Videos","/api/listings/video",true],["Trending Music","/api/listings/music",true],
+  ["Resume Bank","/api/resumes",false],["Dating","/api/dating",false]
+ ];
+ for(const [key,path,addLocal] of defs){
+  try{
+   const r=await fetch(api()+path,{cache:"no-store"});
+   if(!r.ok)continue;                         // never turn a failed endpoint into zero
+   const rows=await r.json();
+   if(!Array.isArray(rows))continue;
    document.querySelectorAll(".mw-bottom-dashboard .stat").forEach(card=>{
     const label=(card.dataset.countKey||card.querySelector("span")?.textContent||"").trim();
     if(label!==key)return;
-    if(add){
-     if(card.dataset.harvested===undefined)card.dataset.harvested=String(Number(card.dataset.total||card.querySelector("b")?.textContent||0)||0);
-     n=(Number(card.dataset.harvested)||0)+(Number(n)||0);
-    }
-    card.dataset.total=String(n);
-    const b=card.querySelector("b"); if(b)b.textContent=String(n);
+    // page_chrome's generated count is the immutable harvested baseline.
+    // Cache it once; subsequent refreshes never add community counts twice.
+    if(card.dataset.harvestedTotal===undefined)
+      card.dataset.harvestedTotal=String(Number(card.dataset.total||card.querySelector("b")?.textContent||0)||0);
+    const harvested=addLocal?(Number(card.dataset.harvestedTotal)||0):0;
+    const total=harvested+rows.length;
+    card.dataset.total=String(total);
+    const b=card.querySelector("b"); if(b)b.textContent=String(total);
    });
-  });
- }catch{}
+  }catch(e){ /* leave generated count untouched */ }
+ }
 }
 window.refreshCloudDashboardCounts=refreshCloudDashboardCounts;
 document.addEventListener("DOMContentLoaded",()=>{refreshCloudDashboardCounts();setInterval(refreshCloudDashboardCounts,30000)});
