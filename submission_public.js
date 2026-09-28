@@ -22,6 +22,25 @@ function replaceCloud(section,a){document.querySelectorAll(`.mw-cloud-card[data-
 window.loadSubmittedListings=async function(section){let a=await g("/api/listings/"+section);replaceCloud(section,a);window.__mwCloudTimers=window.__mwCloudTimers||{};if(!window.__mwCloudTimers[section])window.__mwCloudTimers[section]=setInterval(()=>window.loadSubmittedListings(section),30000)};
 window.loadSubmittedResumes=async()=>{let h=document.querySelector("#submitted-resumes");if(!h)return;let a=await g("/api/resumes");h.innerHTML=a.map(x=>{let text=String(x.resume_text||"");let summary=(text.match(/Summary:\s*([^\n]+)/i)||[])[1]||(text.match(/Experience:\s*([^\n]+)/i)||[])[1]||"Professional profile";let skills=(text.match(/Skills:\s*([^\n]+)/i)||[])[1]||"";let link=`community_article.html?id=${encodeURIComponent(x.id||"")}&type=resume`;return `<article class="card mw-story mw-cloud-card" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="resume" data-role="${e([x.job_title,x.profession,x.organization].filter(Boolean).join(" "))}" data-skills="${e(text)}">${x.profile_image_url?`<img class="mw-feed-image" src="${e(abs(x.profile_image_url))}" alt="">`:""}<div><div class="src"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span></div><h2>${e([x.first_name,x.last_name].filter(Boolean).join(" "))}</h2><h3>${e(x.job_title||x.profession||"Professional profile")}</h3>${x.organization||x.city||x.country?`<div class="facts">${e([x.organization,x.city,x.country].filter(Boolean).join(" · "))}</div>`:""}<p>${e(summary)}</p>${skills?`<div class="facts"><strong>Skills:</strong> ${e(skills)}</div>`:""}${x.email?`<div class="contact"><strong>Email:</strong> ${e(x.email)}</div>`:""}<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a></div></article>`}).join("");notify()};
 window.loadSubmittedDating=async()=>{let h=document.querySelector("#submitted-dating");if(!h)return;let a=await g("/api/dating");h.innerHTML=a.map(x=>{let bio=String(x.bio||"");let gender=(bio.match(/Gender:\s*([^\n]+)/i)||[])[1]||"",goal=(bio.match(/Relationship goal:\s*([^\n]+)/i)||[])[1]||"",occupation=(bio.match(/Occupation:\s*([^\n]+)/i)||[])[1]||"";let link=`community_article.html?id=${encodeURIComponent(x.id||"")}&type=dating`;return `<article class="dating-card mw-story mw-cloud-card" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="dating" data-age="${e(x.age||"")}" data-gender="${e(gender)}" data-goal="${e(goal)}">${x.photo_url?`<img class="mw-feed-image" src="${e(abs(x.photo_url))}" alt="">`:""}<div class="dating-copy"><div class="src"><span class="mw-community-label">MAESTRO WORLD VIEW · COMMUNITY SUBMISSION</span></div><h2>${e(x.display_name||"Dating profile")}${x.age?`, ${e(x.age)}`:""}</h2><h3>${e(x.headline||occupation||"Dating profile")}</h3><div class="facts">${e([x.city,x.country,gender,goal].filter(Boolean).join(" · "))}</div><p>${e(bio.length>320?bio.slice(0,317).trimEnd()+"…":bio)}</p>${x.contact_email?`<div class="contact"><strong>Email:</strong> ${e(x.contact_email)}</div>`:""}<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">READ MORE</a></div></article>`}).join("");notify()};
+const COUNT_CACHE="mw_community_counts_v1";
+function readCountCache(){try{return JSON.parse(localStorage.getItem(COUNT_CACHE)||"{}")||{}}catch{return{}}}
+function writeCountCache(v){try{localStorage.setItem(COUNT_CACHE,JSON.stringify(v))}catch{}}
+function applyCommunityCount(key,n,addLocal){
+ document.querySelectorAll(".mw-bottom-dashboard .stat").forEach(card=>{
+  const label=(card.dataset.countKey||card.querySelector("span")?.textContent||"").trim();
+  if(label!==key)return;
+  if(card.dataset.harvestedTotal===undefined)
+   card.dataset.harvestedTotal=String(Number(card.dataset.total||card.querySelector("b")?.textContent||0)||0);
+  const harvested=addLocal?(Number(card.dataset.harvestedTotal)||0):0;
+  const total=harvested+(Number(n)||0);
+  card.dataset.total=String(total);
+  const b=card.querySelector("b");if(b)b.textContent=String(total);
+ });
+}
+function applyCachedCommunityCounts(){
+ const cache=readCountCache();
+ Object.entries(cache).forEach(([key,v])=>applyCommunityCount(key,v.n,v.addLocal));
+}
 async function refreshCloudDashboardCounts(){
  const defs=[
   ["News","/api/listings/news",true],["Sports","/api/listings/sports",true],
@@ -43,22 +62,14 @@ async function refreshCloudDashboardCounts(){
    if(!r.ok)continue;                         // never turn a failed endpoint into zero
    const rows=await r.json();
    if(!Array.isArray(rows))continue;
-   document.querySelectorAll(".mw-bottom-dashboard .stat").forEach(card=>{
-    const label=(card.dataset.countKey||card.querySelector("span")?.textContent||"").trim();
-    if(label!==key)return;
-    // page_chrome's generated count is the immutable harvested baseline.
-    // Cache it once; subsequent refreshes never add community counts twice.
-    if(card.dataset.harvestedTotal===undefined)
-      card.dataset.harvestedTotal=String(Number(card.dataset.total||card.querySelector("b")?.textContent||0)||0);
-    const harvested=addLocal?(Number(card.dataset.harvestedTotal)||0):0;
-    const total=harvested+rows.length;
-    card.dataset.total=String(total);
-    const b=card.querySelector("b"); if(b)b.textContent=String(total);
-   });
+   const cache=readCountCache();
+   cache[key]={n:rows.length,addLocal:!!addLocal,at:Date.now()};
+   writeCountCache(cache);
+   applyCommunityCount(key,rows.length,addLocal);
   }catch(e){ /* leave generated count untouched */ }
  }
 }
 window.refreshCloudDashboardCounts=refreshCloudDashboardCounts;
-document.addEventListener("DOMContentLoaded",()=>{refreshCloudDashboardCounts();setInterval(refreshCloudDashboardCounts,30000)});
+document.addEventListener("DOMContentLoaded",()=>{applyCachedCommunityCounts();refreshCloudDashboardCounts();setInterval(refreshCloudDashboardCounts,30000)});
 
 })();
