@@ -128,7 +128,7 @@ function boot(){
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
  country.addEventListener("change",()=>{hydrationKey="";refill();apply()});city.addEventListener("change",()=>{hydrationKey="";apply()});section.addEventListener("change",()=>{hydrationKey="";apply()});keyword?.addEventListener("input",apply);
- $("#mw-apply-location")?.addEventListener("click",()=>{apply();let c=canon(country.value),ct=city.value,sec=section.value,q=(keyword?.value||"").trim();let cur=(location.pathname.split("/").pop()||"index.html").toLowerCase();let target=(sec&&sectionPages[sec])?sectionPages[sec]:(isIndexPage()?"index.html":cur);window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")});
+ $("#mw-apply-location")?.addEventListener("click",()=>{let sec=section.value;if(!sec)return;apply();let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();let target=sectionPages[sec];if(!target)return;window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")});
  $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
  const params=new URLSearchParams(location.search);
  const _hasFilterParams=params.has("country")||params.has("city")||params.has("section")||params.has("keyword");
