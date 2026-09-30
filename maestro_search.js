@@ -13,10 +13,17 @@ function setSearchMode(on){
  // Permanent navigation rule: Ask Maestro + YOUR LOCAL WORLD VIEW must remain visible
  // on every dedicated results tab, regardless of generated wrapper/CSS structure.
  if(on){
-   document.querySelectorAll('.mw-location-picker').forEach(p=>{
-     p.hidden=false;p.style.setProperty('display','block','important');
-     let a=p.parentElement;
-     while(a&&a!==document.body){a.hidden=false;a.style.setProperty('display','', 'important');a=a.parentElement;}
+   const ask=document.querySelector('.mw-ask-maestro');
+   const results=document.querySelector('#mw-search-results');
+   document.querySelectorAll('.mw-location-picker').forEach((p,idx)=>{
+     // Results tabs use the same real location panel, not a copy. Move the first
+     // canonical panel inside Ask Maestro immediately before the results so no
+     // outer page wrapper or search-mode CSS can hide it.
+     if(idx===0 && ask && results && p.parentElement!==ask) ask.insertBefore(p,results);
+     p.hidden=false;
+     p.style.setProperty('display','block','important');
+     p.style.setProperty('visibility','visible','important');
+     p.style.setProperty('opacity','1','important');
    });
  }
 
@@ -155,6 +162,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  f?.addEventListener('submit',e=>{e.preventDefault();let q=(i?.value||'').trim();if(!q)return;let u=new URL('index.html',location.href);u.search='';u.searchParams.set('mw_search',q);let c=document.querySelector('#mw-country')?.value||'',ct=document.querySelector('#mw-city')?.value||'',sec=document.querySelector('#mw-section')?.value||'',kw=document.querySelector('#mw-keyword')?.value||'';if(c)u.searchParams.set('country',c);if(ct)u.searchParams.set('city',ct);if(sec)u.searchParams.set('section',sec);if(kw)u.searchParams.set('keyword',kw);window.open(u.href,'_blank','noopener')});
  i?.addEventListener('search',()=>{if(!i.value.trim())clearSearch()});
  // Dedicated results tab: run the requested query automatically.
- let params=new URLSearchParams(location.search);let q=params.get('mw_search');if(q){if(i)i.value=q;run(q)}else if(params.get('mw_all_sections')==='1'){runAllSections(params)}
+ let params=new URLSearchParams(location.search);let q=params.get('mw_search');if(q){if(i)i.value=q;run(q)}else if(params.get('mw_all_sections')==='1'){let u=new URL('all_sections.html',location.href);['country','city','section','keyword'].forEach(k=>{let v=params.get(k);if(v)u.searchParams.set(k,v)});location.replace(u.href)}
 });
 })();
