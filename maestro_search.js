@@ -10,6 +10,16 @@ function setSearchMode(on){
  document.body.classList.toggle('mw-search-active',!!on);
  document.body.dataset.mwSearchMode=on?'1':'0';
 
+ // Permanent navigation rule: Ask Maestro + YOUR LOCAL WORLD VIEW must remain visible
+ // on every dedicated results tab, regardless of generated wrapper/CSS structure.
+ if(on){
+   document.querySelectorAll('.mw-location-picker').forEach(p=>{
+     p.hidden=false;p.style.setProperty('display','block','important');
+     let a=p.parentElement;
+     while(a&&a!==document.body){a.hidden=false;a.style.setProperty('display','', 'important');a=a.parentElement;}
+   });
+ }
+
  // Search is a dedicated results view. Hide/restore actual DOM nodes instead of relying
  // on page-specific CSS structure. This works identically on Index and section pages.
  [...document.body.children].forEach(n=>{
