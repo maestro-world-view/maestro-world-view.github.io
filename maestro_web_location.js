@@ -149,6 +149,32 @@ function boot(){
  if(keyword&&params.has("keyword"))keyword.value=params.get("keyword")||"";
  document.addEventListener("maestro:cloud-updated",()=>{let oldC=country.value,oldCity=city.value;setopts(country,uniq(ALL_COUNTRIES.concat(pairs().map(x=>x.country))),"All countries");let hit=[...country.options].find(o=>norm(o.value)===norm(oldC));if(hit)country.value=hit.value;refill();let chit=[...city.options].find(o=>norm(o.value)===norm(oldCity));if(chit)city.value=chit.value;apply()});
  apply();
+ // Persist the active location state into every internal section link that opens a new tab
+ // (including bottom dashboard OPEN SECTION links). This keeps Country/City/Keyword/Section
+ // when navigating from All Sections or any dedicated section page.
+ function carryFiltersToInternalLinks(){
+   const c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();
+   $$('a[target="_blank"][href]').forEach(a=>{
+     const raw=a.getAttribute("href")||"";
+     if(!raw||raw.startsWith("#")||/^(?:mailto:|tel:|javascript:)/i.test(raw))return;
+     let u;try{u=new URL(raw,location.href)}catch(e){return}
+     if(u.origin!==location.origin)return;
+     const page=(u.pathname.split("/").pop()||"").toLowerCase();
+     const entry=Object.entries(sectionPages).find(([k,v])=>v.toLowerCase()===page);
+     let targetSec=entry?entry[0]:(page==="all_sections.html"?"all":"");
+     if(!targetSec)return;
+     if(c)u.searchParams.set("country",c);else u.searchParams.delete("country");
+     if(ct)u.searchParams.set("city",ct);else u.searchParams.delete("city");
+     if(q)u.searchParams.set("keyword",q);else u.searchParams.delete("keyword");
+     u.searchParams.set("section",targetSec);
+     a.href=u.href;
+   });
+ }
+ carryFiltersToInternalLinks();
+ country.addEventListener("change",carryFiltersToInternalLinks);
+ city.addEventListener("change",carryFiltersToInternalLinks);
+ section.addEventListener("change",carryFiltersToInternalLinks);
+ keyword?.addEventListener("input",carryFiltersToInternalLinks);
  // Other Maestro scripts may touch card display. Reassert exact location filtering after DOM mutations.
  let pending=false;
  new MutationObserver(()=>{if(pending)return;pending=true;setTimeout(()=>{pending=false;apply()},50)}).observe(document.body,{childList:true,subtree:true});
