@@ -13,7 +13,7 @@ function setSearchMode(on){
  // Search is a dedicated results view. Hide/restore actual DOM nodes instead of relying
  // on page-specific CSS structure. This works identically on Index and section pages.
  [...document.body.children].forEach(n=>{
-   if(n.matches('.mw-brandbar,.mw-ask-maestro,.mw-site-footer,.mw-location-picker'))return;
+   if(n.matches('.mw-brandbar,.mw-ask-maestro,.mw-site-footer,.mw-location-picker') || n.querySelector?.('.mw-location-picker'))return;
    if(on){
      if(!n.hasAttribute('data-mw-search-display')){
        n.setAttribute('data-mw-search-display',n.style.display||'');
@@ -35,7 +35,7 @@ function setSearchMode(on){
  // During a search keep ONLY the search form and result container visible there.
  let ask=document.querySelector('.mw-ask-maestro');
  if(ask)[...ask.children].forEach(n=>{
-   if(n.matches('#mw-ask-form,#mw-search-results,.mw-ask-box,form'))return;
+   if(n.matches('#mw-ask-form,#mw-search-results,.mw-ask-box,form,.mw-location-picker') || n.querySelector?.('.mw-location-picker'))return;
    if(on){
      if(!n.hasAttribute('data-mw-search-inner-display'))
        n.setAttribute('data-mw-search-inner-display',n.style.display||'');
@@ -142,7 +142,7 @@ async function runAllSections(params){
 document.addEventListener('DOMContentLoaded',()=>{
  ensure();let f=document.querySelector('#mw-ask-form'),i=document.querySelector('#mw-ask-input');
  // Main Ask Maestro search always opens a dedicated results view in a NEW tab.
- f?.addEventListener('submit',e=>{e.preventDefault();let q=(i?.value||'').trim();if(!q)return;let u=new URL('index.html',location.href);u.searchParams.set('mw_search',q);window.open(u.href,'_blank','noopener')});
+ f?.addEventListener('submit',e=>{e.preventDefault();let q=(i?.value||'').trim();if(!q)return;let u=new URL('index.html',location.href);u.search='';u.searchParams.set('mw_search',q);let c=document.querySelector('#mw-country')?.value||'',ct=document.querySelector('#mw-city')?.value||'',sec=document.querySelector('#mw-section')?.value||'',kw=document.querySelector('#mw-keyword')?.value||'';if(c)u.searchParams.set('country',c);if(ct)u.searchParams.set('city',ct);if(sec)u.searchParams.set('section',sec);if(kw)u.searchParams.set('keyword',kw);window.open(u.href,'_blank','noopener')});
  i?.addEventListener('search',()=>{if(!i.value.trim())clearSearch()});
  // Dedicated results tab: run the requested query automatically.
  let params=new URLSearchParams(location.search);let q=params.get('mw_search');if(q){if(i)i.value=q;run(q)}else if(params.get('mw_all_sections')==='1'){runAllSections(params)}
