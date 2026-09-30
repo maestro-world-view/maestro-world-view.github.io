@@ -13,7 +13,7 @@ function setSearchMode(on){
  // Search is a dedicated results view. Hide/restore actual DOM nodes instead of relying
  // on page-specific CSS structure. This works identically on Index and section pages.
  [...document.body.children].forEach(n=>{
-   if(n.matches('.mw-brandbar,.mw-ask-maestro,.mw-site-footer'))return;
+   if(n.matches('.mw-brandbar,.mw-ask-maestro,.mw-site-footer,.mw-location-picker'))return;
    if(on){
      if(!n.hasAttribute('data-mw-search-display')){
        n.setAttribute('data-mw-search-display',n.style.display||'');
