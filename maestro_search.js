@@ -116,12 +116,35 @@ async function run(raw){
 
  out.scrollIntoView({behavior:'smooth',block:'start'})
 }
+
+async function runAllSections(params){
+ let out=document.querySelector('#mw-search-results');
+ let country=(params.get('country')||'').trim(),city=(params.get('city')||'').trim(),keyword=(params.get('keyword')||'').trim(),q=norm(keyword);
+ setSearchMode(true);out.hidden=false;
+ out.innerHTML='<div class="mw-search-toolbar"><strong>ALL SECTIONS · MAESTRO DATABASE</strong><button type="button" id="mw-clear-search">CLOSE</button></div><div class="mw-web-wait">Loading Maestro database…</div>';
+ document.querySelector('#mw-clear-search')?.addEventListener('click',clearSearch);
+ try{
+   if(!MW_INDEX_CACHE){let r=await fetch('maestro_search_index.json?v=228',{cache:'no-store'});MW_INDEX_CACHE=r.ok?await r.json():[]}
+   let rows=(MW_INDEX_CACHE||[]).filter(x=>{
+     if(country&&norm(x.country)!==norm(country))return false;
+     if(city&&norm(x.city)!==norm(city))return false;
+     if(q&&!strictMatches(x,q))return false;
+     return true;
+   });
+   let label=['All Sections',city,country,keyword&&('Keyword: '+keyword)].filter(Boolean).join(' · ');
+   out.innerHTML='<div class="mw-search-toolbar"><strong>'+esc(label)+' · '+rows.length+' LISTINGS</strong><button type="button" id="mw-clear-search">CLOSE</button></div>'+group('MAESTRO DATABASE',rows,'harvested');
+   document.querySelector('#mw-clear-search')?.addEventListener('click',clearSearch);
+   if(!rows.length)out.insertAdjacentHTML('beforeend','<p class="mw-search-empty">No Maestro database listings match these filters.</p>');
+   out.scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(e){out.innerHTML='<p class="mw-search-empty">Unable to load Maestro database listings.</p>'}
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
  ensure();let f=document.querySelector('#mw-ask-form'),i=document.querySelector('#mw-ask-input');
  // Main Ask Maestro search always opens a dedicated results view in a NEW tab.
  f?.addEventListener('submit',e=>{e.preventDefault();let q=(i?.value||'').trim();if(!q)return;let u=new URL('index.html',location.href);u.searchParams.set('mw_search',q);window.open(u.href,'_blank','noopener')});
  i?.addEventListener('search',()=>{if(!i.value.trim())clearSearch()});
  // Dedicated results tab: run the requested query automatically.
- let q=new URLSearchParams(location.search).get('mw_search');if(q){if(i)i.value=q;run(q)}
+ let params=new URLSearchParams(location.search);let q=params.get('mw_search');if(q){if(i)i.value=q;run(q)}else if(params.get('mw_all_sections')==='1'){runAllSections(params)}
 });
 })();

@@ -99,10 +99,11 @@ function boot(){
  }
  function apply(){
    let c=canon(country.value),ct=city.value,sec=section.value,q=(keyword?.value||"").trim().toLocaleLowerCase();
+   const secFilter=sec==="all"?"":sec;
    // Dedicated pages already define their section. A stale section preference must not hide their feed.
    const page=(location.pathname.split("/").pop()||"index.html").toLowerCase();
    const dedicatedKey=Object.entries(sectionPages).find(([k,v])=>v.toLowerCase()===page)?.[0]||"";
-   if(dedicatedKey)sec=dedicatedKey;
+   if(dedicatedKey){sec=dedicatedKey;}
    if(!isIndexPage()){
      localStorage.setItem("mw_web_country",c);
      localStorage.setItem("mw_web_city",ct);
@@ -110,7 +111,7 @@ function boot(){
    }
    let all=cards(),shown=0;
    all.forEach(x=>{
-     let ok=wanted(x,c,ct,sec)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));
+     let ok=wanted(x,c,ct,secFilter)&&(!q||(x.innerText||"").toLocaleLowerCase().includes(q));
      x.hidden=!ok;
      x.dataset.mwLocationVisible=ok?"1":"0";
      x.style.setProperty("display",ok?"":"none","important");
@@ -120,15 +121,15 @@ function boot(){
    if((c||ct)&&!shown&&!(isIndexPage()&&hydrating)){let host=$(".mw-section-wrap,.wrap,main")||document.body,e=document.createElement("div");e.className="mw-empty mw-filter-empty";e.textContent="No data collected for "+[ct,c].filter(Boolean).join(", ")+" in this view.";host.prepend(e)}
    const isIndex=isIndexPage();
    if(isIndex){
-     $$(".mw-editorial-section[data-mw-section],.mw-live-section[data-mw-section]").forEach(box=>{let k=(box.dataset.mwSection||"").toLowerCase();box.hidden=!!sec&&k!==sec;box.style.setProperty("display",(!sec||k===sec)?"":"none","important")});
-     hydrateIndex(c,ct,sec);
+     $$(".mw-editorial-section[data-mw-section],.mw-live-section[data-mw-section]").forEach(box=>{let k=(box.dataset.mwSection||"").toLowerCase();box.hidden=!!secFilter&&k!==secFilter;box.style.setProperty("display",(!secFilter||k===secFilter)?"":"none","important")});
+     hydrateIndex(c,ct,secFilter);
    }
    updateDashboard(c,ct);
    if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")+" · "+shown+" matching items"):("Showing all available areas · "+shown+" items");
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
  country.addEventListener("change",()=>{hydrationKey="";refill();apply()});city.addEventListener("change",()=>{hydrationKey="";apply()});section.addEventListener("change",()=>{hydrationKey="";apply()});keyword?.addEventListener("input",apply);
- $("#mw-apply-location")?.addEventListener("click",()=>{let sec=section.value;if(!sec)return;apply();let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();let target=sectionPages[sec];if(!target)return;window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")});
+ $("#mw-apply-location")?.addEventListener("click",()=>{let sec=section.value;if(!sec)return;apply();let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();if(sec==="all"){let u=new URL("index.html",location.href);u.searchParams.set("mw_all_sections","1");u.searchParams.set("section","all");if(c)u.searchParams.set("country",c);if(ct)u.searchParams.set("city",ct);if(q)u.searchParams.set("keyword",q);window.open(u.href,"_blank","noopener");return;}let target=sectionPages[sec];if(!target)return;window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")});
  $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
  const params=new URLSearchParams(location.search);
  const _hasFilterParams=params.has("country")||params.has("city")||params.has("section")||params.has("keyword");
