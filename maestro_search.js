@@ -103,14 +103,11 @@ async function run(raw){
    seenWeb.add(k);return true;
  });
 
- // Required order on ALL pages:
- // 1. WEB RESULTS
- // 2. MAESTRO DATABASE / harvested public records
- // 3. MAESTRO COMMUNITY / uploaded records
+ // Search result order: Maestro first, worldwide web results at the bottom.
  out.innerHTML='<div class="mw-search-toolbar"><strong>RESULTS FOR “'+esc(raw.trim())+'”</strong><button type="button" id="mw-clear-search">CLEAR SEARCH</button></div>'
-   +group('WEB RESULTS',web,'web')
    +group('MAESTRO DATABASE',[...l.harvested,...global],'harvested')
-   +group('MAESTRO COMMUNITY',l.community,'community');
+   +group('MAESTRO COMMUNITY',l.community,'community')
+   +group('WORLD WIDE WEB RESULTS',web,'web');
 
  document.querySelector('#mw-clear-search')?.addEventListener('click',clearSearch);
 
@@ -119,5 +116,12 @@ async function run(raw){
 
  out.scrollIntoView({behavior:'smooth',block:'start'})
 }
-document.addEventListener('DOMContentLoaded',()=>{ensure();let f=document.querySelector('#mw-ask-form'),i=document.querySelector('#mw-ask-input');f?.addEventListener('submit',e=>{e.preventDefault();run(i.value)});i?.addEventListener('search',()=>{if(!i.value.trim())clearSearch()});});
+document.addEventListener('DOMContentLoaded',()=>{
+ ensure();let f=document.querySelector('#mw-ask-form'),i=document.querySelector('#mw-ask-input');
+ // Main Ask Maestro search always opens a dedicated results view in a NEW tab.
+ f?.addEventListener('submit',e=>{e.preventDefault();let q=(i?.value||'').trim();if(!q)return;let u=new URL('index.html',location.href);u.searchParams.set('mw_search',q);window.open(u.href,'_blank','noopener')});
+ i?.addEventListener('search',()=>{if(!i.value.trim())clearSearch()});
+ // Dedicated results tab: run the requested query automatically.
+ let q=new URLSearchParams(location.search).get('mw_search');if(q){if(i)i.value=q;run(q)}
+});
 })();
