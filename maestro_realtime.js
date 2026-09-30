@@ -16,7 +16,7 @@
    bar.innerHTML='<div class="mw-v224-header">'
      +'<div class="mw-v224-spacer" aria-hidden="true"></div>'
      +'<a class="mw-v224-logo" href="index.html"><img src="logo1.png" alt="Maestro World View"></a>'
-     +'<div class="mw-v224-controls">'+(isHome?'':'<a class="mw-v224-home" href="index.html">HOME</a>')+'<span class="mw-v224-live">● LIVE · 5 MIN</span></div>'
+     +'<div class="mw-v224-controls">'+(isHome?'':'<a class="mw-v224-home" href="index.html">HOME</a>')+'<span class="mw-v224-live">● LIVE</span></div>'
      +'</div>';
    document.body.insertBefore(bar,document.body.firstChild);
  }
