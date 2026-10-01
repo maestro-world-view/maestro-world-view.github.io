@@ -47,6 +47,16 @@ function boot(){
    $$(".stats .stat").forEach(box=>{let label=(box.querySelector("span")?.textContent||"").trim(),key=map[label];if(key){let b=box.querySelector("b");if(b)b.textContent=sums[key]}});
  }
  const isIndexPage=()=>/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
+  function syncApplyAvailability(){
+    const b=$("#mw-apply-location");
+    if(!b)return;
+    const sec=(section?.value||"").trim();
+    const hasCriterion=!!(canon(country.value)||city.value||(keyword?.value||"").trim()||(sec&&sec!=="all"));
+    b.disabled=!hasCriterion;
+    b.setAttribute("aria-disabled",hasCriterion?"false":"true");
+    b.style.opacity=hasCriterion?"":"0.5";
+    b.style.cursor=hasCriterion?"":"not-allowed";
+  }
  function syncSectionChoice(){
    if(!section)return;
    const scoped=!!(canon(country.value)||city.value||(keyword?.value||"").trim());
@@ -64,6 +74,7 @@ function boot(){
    }else if(section.value===""){
      section.value="all";
    }
+   syncApplyAvailability();
  }
 
  const stateURL=(target,c,ct,sec,q)=>{
@@ -149,8 +160,8 @@ function boot(){
    if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")+" · "+shown+" matching items"):("Showing all available areas · "+shown+" items");
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
- country.addEventListener("change",()=>{hydrationKey="";refill();syncSectionChoice();apply()});city.addEventListener("change",()=>{hydrationKey="";syncSectionChoice();apply()});section.addEventListener("change",()=>{hydrationKey="";apply()});keyword?.addEventListener("input",()=>{syncSectionChoice();apply()});
- $("#mw-apply-location")?.addEventListener("click",(ev)=>{syncSectionChoice();let sec=section.value;if(!sec)return;let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();let target=sec==="all"?"all_sections.html":sectionPages[sec];if(!target)return;ev.preventDefault();ev.stopImmediatePropagation();apply();window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")},true);
+ country.addEventListener("change",()=>{hydrationKey="";refill();syncSectionChoice();apply()});city.addEventListener("change",()=>{hydrationKey="";syncSectionChoice();apply()});section.addEventListener("change",()=>{hydrationKey="";syncApplyAvailability();apply()});keyword?.addEventListener("input",()=>{syncSectionChoice();apply()});
+ $("#mw-apply-location")?.addEventListener("click",(ev)=>{syncSectionChoice();let sec=section.value,c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();const hasCriterion=!!(c||ct||q||(sec&&sec!=="all"));if(!hasCriterion){ev.preventDefault();ev.stopImmediatePropagation();syncApplyAvailability();return;}if(!sec)sec="all";let target=sec==="all"?"all_sections.html":sectionPages[sec];if(!target)return;ev.preventDefault();ev.stopImmediatePropagation();apply();window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")},true);
  $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";syncSectionChoice();apply()});
  const params=new URLSearchParams(location.search);
  const _hasFilterParams=params.has("country")||params.has("city")||params.has("section")||params.has("keyword");
