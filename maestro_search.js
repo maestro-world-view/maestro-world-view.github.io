@@ -93,11 +93,21 @@ async function run(raw){
  // rows merely because the exact full query string is absent from title/snippet.
  let globalPromise=maestroGlobal(q);
  let webPromise=(async()=>{
+   // Primary: Maestro backend web-search endpoint.
    try{
-     let r=await fetch(API()+'/api/search?q='+encodeURIComponent(raw.trim()),{cache:'no-store'});
-     if(!r.ok)return[];
-     let j=await r.json();
-     return Array.isArray(j.results)?j.results:[];
+     let base=API();
+     if(base){
+       let r=await fetch(base+'/api/search?q='+encodeURIComponent(raw.trim()),{cache:'no-store'});
+       if(r.ok){let j=await r.json();if(Array.isArray(j.results)&&j.results.length)return j.results}
+     }
+   }catch(e){}
+   // Static-site fallback: DuckDuckGo Instant Answer related web records. No API key is exposed.
+   try{
+     let r=await fetch('https://api.duckduckgo.com/?q='+encodeURIComponent(raw.trim())+'&format=json&no_html=1&no_redirect=1&skip_disambig=1',{cache:'no-store'});
+     if(!r.ok)return[];let j=await r.json(),out=[];
+     const add=x=>{if(!x)return;if(x.FirstURL&&x.Text)out.push({url:x.FirstURL,title:(x.Text.split(' - ')[0]||x.Text),description:x.Text,image_url:'logo1.png'});if(Array.isArray(x.Topics))x.Topics.forEach(add)};
+     if(j.AbstractURL&&j.AbstractText)out.push({url:j.AbstractURL,title:j.Heading||raw.trim(),description:j.AbstractText,image_url:'logo1.png'});
+     (j.RelatedTopics||[]).forEach(add);return out.slice(0,40);
    }catch(e){return[]}
  })();
 
