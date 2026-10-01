@@ -130,7 +130,7 @@ function boot(){
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
  country.addEventListener("change",()=>{hydrationKey="";refill();apply()});city.addEventListener("change",()=>{hydrationKey="";apply()});section.addEventListener("change",()=>{hydrationKey="";apply()});keyword?.addEventListener("input",apply);
- $("#mw-apply-location")?.addEventListener("click",()=>{let sec=section.value;if(!sec)return;apply();let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();let target=sec==="all"?"all_sections.html":sectionPages[sec];if(!target)return;window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")});
+ $("#mw-apply-location")?.addEventListener("click",(ev)=>{let sec=section.value||"all";let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();let target=sec==="all"?"all_sections.html":sectionPages[sec];if(!target)return;ev.preventDefault();ev.stopImmediatePropagation();apply();window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")},true);
  $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
  const params=new URLSearchParams(location.search);
  const _hasFilterParams=params.has("country")||params.has("city")||params.has("section")||params.has("keyword");
