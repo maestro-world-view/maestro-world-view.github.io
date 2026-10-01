@@ -1,5 +1,5 @@
 (()=>{
-const API=()=>String(window.MAESTRO_SUBMISSION_API||'').replace(/\/$/,'');
+const API=()=>String(window.MAESTRO_SUBMISSION_API||'https://maestro-submissions.onrender.com').replace(/\/$/,'');
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const norm=s=>String(s||'').toLowerCase().replace(/\s+/g,' ').trim();
 const plain=s=>{const d=document.createElement('textarea');d.innerHTML=String(s??'');let v=d.value;const x=document.createElement('div');x.innerHTML=v;return (x.textContent||x.innerText||'').replace(/\s+/g,' ').trim()};
