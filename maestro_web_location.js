@@ -47,6 +47,25 @@ function boot(){
    $$(".stats .stat").forEach(box=>{let label=(box.querySelector("span")?.textContent||"").trim(),key=map[label];if(key){let b=box.querySelector("b");if(b)b.textContent=sums[key]}});
  }
  const isIndexPage=()=>/\/(?:index\.html)?$/i.test(location.pathname)||location.pathname.endsWith("/");
+ function syncSectionChoice(){
+   if(!section)return;
+   const scoped=!!(canon(country.value)||city.value||(keyword?.value||"").trim());
+   let placeholder=[...section.options].find(o=>o.value==="");
+   if(!placeholder){
+     placeholder=document.createElement("option");
+     placeholder.value="";
+     placeholder.textContent="Select a Section";
+     section.insertBefore(placeholder,section.firstChild);
+   }else placeholder.textContent="Select a Section";
+   const allOpt=[...section.options].find(o=>o.value==="all");
+   if(allOpt)allOpt.disabled=!scoped;
+   if(!scoped){
+     if(section.value==="all"||!section.value)section.value="";
+   }else if(section.value===""){
+     section.value="all";
+   }
+ }
+
  const stateURL=(target,c,ct,sec,q)=>{
    const u=new URL(target,location.href);
    if(c)u.searchParams.set("country",c);else u.searchParams.delete("country");
@@ -109,6 +128,7 @@ function boot(){
      localStorage.setItem("mw_web_country",c);
      localStorage.setItem("mw_web_city",ct);
      localStorage.setItem("mw_web_section",sec);
+     localStorage.setItem("mw_web_keyword",(keyword?.value||"").trim());
    }
    let all=cards(),shown=0;
    all.forEach(x=>{
@@ -129,9 +149,9 @@ function boot(){
    if(current)current.textContent=(c||ct||sec)?("Showing: "+[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")+" · "+shown+" matching items"):("Showing all available areas · "+shown+" items");
    $$(".mw-myworld-text").forEach(x=>x.textContent=[ct,c,sec&&sec.replaceAll("_"," ")].filter(Boolean).join(" · ")||"Your saved country, city and section preferences stay on this device.");
  }
- country.addEventListener("change",()=>{hydrationKey="";refill();apply()});city.addEventListener("change",()=>{hydrationKey="";apply()});section.addEventListener("change",()=>{hydrationKey="";apply()});keyword?.addEventListener("input",apply);
- $("#mw-apply-location")?.addEventListener("click",(ev)=>{let sec=section.value||"all";let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();let target=sec==="all"?"all_sections.html":sectionPages[sec];if(!target)return;ev.preventDefault();ev.stopImmediatePropagation();apply();window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")},true);
- $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";apply()});
+ country.addEventListener("change",()=>{hydrationKey="";refill();syncSectionChoice();apply()});city.addEventListener("change",()=>{hydrationKey="";syncSectionChoice();apply()});section.addEventListener("change",()=>{hydrationKey="";apply()});keyword?.addEventListener("input",()=>{syncSectionChoice();apply()});
+ $("#mw-apply-location")?.addEventListener("click",(ev)=>{syncSectionChoice();let sec=section.value;if(!sec)return;let c=canon(country.value),ct=city.value,q=(keyword?.value||"").trim();let target=sec==="all"?"all_sections.html":sectionPages[sec];if(!target)return;ev.preventDefault();ev.stopImmediatePropagation();apply();window.open(stateURL(target,c,ct,sec,q),"_blank","noopener")},true);
+ $("#mw-clear-location")?.addEventListener("click",()=>{country.value="";refill();city.value="";section.value="";if(keyword)keyword.value="";syncSectionChoice();apply()});
  const params=new URLSearchParams(location.search);
  const _hasFilterParams=params.has("country")||params.has("city")||params.has("section")||params.has("keyword");
  const _indexDefault=isIndexPage()&&!_hasFilterParams;
@@ -142,13 +162,15 @@ function boot(){
    localStorage.removeItem("mw_web_country");
    localStorage.removeItem("mw_web_city");
    localStorage.removeItem("mw_web_section");
+   localStorage.removeItem("mw_web_keyword");
    localStorage.removeItem("maestro_place");
  }
  let co=[...country.options].find(o=>norm(o.value)===norm(sc));if(co){country.value=co.value;refill()}else refill();
  let cio=[...city.options].find(o=>norm(o.value)===norm(st));if(cio)city.value=cio.value;
  if([...section.options].some(o=>o.value===ss))section.value=ss;
- if(keyword&&params.has("keyword"))keyword.value=params.get("keyword")||"";
+ if(keyword)keyword.value=params.has("keyword")?(params.get("keyword")||""):(_indexDefault?"":(localStorage.getItem("mw_web_keyword")||""));
  document.addEventListener("maestro:cloud-updated",()=>{let oldC=country.value,oldCity=city.value;setopts(country,uniq(ALL_COUNTRIES.concat(pairs().map(x=>x.country))),"All countries");let hit=[...country.options].find(o=>norm(o.value)===norm(oldC));if(hit)country.value=hit.value;refill();let chit=[...city.options].find(o=>norm(o.value)===norm(oldCity));if(chit)city.value=chit.value;apply()});
+ syncSectionChoice();
  apply();
  // Persist the active location state into every internal section link that opens a new tab
  // (including bottom dashboard OPEN SECTION links). This keeps Country/City/Keyword/Section
