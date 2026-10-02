@@ -9,7 +9,11 @@
  document.body.classList.toggle('mw-home-page',isHome);
  document.body.classList.toggle('mw-section-page',!isHome);
  document.querySelectorAll('.mw-masthead,.mw-v20-head,.mw-v21-header').forEach(x=>x.remove());
- let bar=document.querySelector('.mw-brandbar.mw-v224-brandbar');
+ // V25.11 SINGLE TOP CHROME: historical generators may leave more than one current masthead.
+ // Keep one authoritative current masthead and remove every duplicate before doing anything else.
+ const currentBars=[...document.querySelectorAll('.mw-brandbar.mw-v224-brandbar')];
+ currentBars.slice(1).forEach(x=>x.remove());
+ let bar=currentBars[0]||null;
  if(!bar){
    bar=document.createElement('header');
    bar.className='mw-brandbar mw-v224-brandbar';
@@ -30,13 +34,20 @@
    }catch(e){}
  }));
 
- const ask=document.querySelector('.mw-ask-maestro');
+ // V25.11: exactly one Ask Maestro block on every page.
+ const asks=[...document.querySelectorAll('.mw-ask-maestro')];
+ asks.slice(1).forEach(x=>x.remove());
+ const ask=asks[0]||null;
  if(ask)bar.insertAdjacentElement('afterend',ask);
+
+ // V25.11: one location/filter panel maximum on every page, including index.
+ const allPickers=[...document.querySelectorAll('.mw-location-picker')];
+ allPickers.slice(1).forEach(x=>x.remove());
 
  // V22.5 section pages: Ask Maestro is the single main search box.
  // Remove old generator-local search inputs; keep the one location-filter panel.
  if(!isHome){
-   document.querySelectorAll('input#q,input.mw-search,.mw-filterbar').forEach(x=>x.remove());
+   document.querySelectorAll('input#q,input#place,input.mw-search,.mw-filterbar').forEach(x=>x.remove());
    const pickers=[...document.querySelectorAll('.mw-location-picker')];
    pickers.slice(1).forEach(x=>x.remove());
  }
