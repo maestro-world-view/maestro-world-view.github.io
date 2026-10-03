@@ -17,11 +17,20 @@ function bindBrowseSections(){
     btn.dataset.mwBrowseBound="1";
     btn.addEventListener("click",function(ev){
       ev.preventDefault();
-      var target=document.getElementById("mw-sections-dashboard");
-      if(!target){var panels=document.querySelectorAll(".mw-bottom-dashboard");target=panels.length?panels[panels.length-1]:null;}
+      // Always use the LAST canonical dashboard. This is defensive against any stale
+      // cached/index markup and keeps Browse Sections aimed at the real bottom panel.
+      var panels=document.querySelectorAll(".mw-bottom-dashboard");
+      var target=panels.length?panels[panels.length-1]:document.getElementById("mw-sections-dashboard");
       if(!target)return;
       try{history.replaceState(null,"",location.pathname+location.search+"#mw-sections-dashboard");}catch(e){}
-      requestAnimationFrame(function(){target.scrollIntoView({behavior:"smooth",block:"start"});});
+      requestAnimationFrame(function(){
+        target.scrollIntoView({behavior:"smooth",block:"start"});
+        // Homepage uses content-visibility for speed; a second alignment after hidden
+        // sections materialize prevents the long INDEX from stopping short.
+        if(document.body.classList.contains("mw-home-page")){
+          setTimeout(function(){target.scrollIntoView({behavior:"smooth",block:"start"});},180);
+        }
+      });
     });
   });
 }
