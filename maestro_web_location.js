@@ -134,7 +134,10 @@ function boot(){
    const page=(location.pathname.split("/").pop()||"index.html").toLowerCase();
    const dedicatedKey=Object.entries(sectionPages).find(([k,v])=>v.toLowerCase()===page)?.[0]||"";
    if(dedicatedKey){sec=dedicatedKey;}
-   const secFilter=sec==="all"?"":sec;
+   // V25.39: a dedicated section page already owns its content type.
+   // Never re-filter that page by card data-type/category; this prevents valid stored
+   // cards from disappearing because of mixed legacy metadata.
+   const secFilter=dedicatedKey?"":(sec==="all"?"":sec);
    if(!isIndexPage()){
      localStorage.setItem("mw_web_country",c);
      localStorage.setItem("mw_web_city",ct);
@@ -166,9 +169,12 @@ function boot(){
  const params=new URLSearchParams(location.search);
  const _hasFilterParams=params.has("country")||params.has("city")||params.has("section")||params.has("keyword");
  const _indexDefault=isIndexPage()&&!_hasFilterParams;
- let sc=_indexDefault?"":canon(params.has("country")?params.get("country"):(localStorage.getItem("mw_web_country")||""));
- let st=_indexDefault?"":(params.has("city")?params.get("city"):(localStorage.getItem("mw_web_city")||""));
- let ss=_indexDefault?"":(params.has("section")?params.get("section"):(localStorage.getItem("mw_web_section")||""));
+ // V25.39: direct visits to dedicated section pages start unfiltered.
+ // Filters are preserved only when explicitly carried in the URL by Maestro navigation.
+ const _dedicatedDirect=!!dedicatedKey&&!_hasFilterParams;
+ let sc=(_indexDefault||_dedicatedDirect)?"":canon(params.has("country")?params.get("country"):(localStorage.getItem("mw_web_country")||""));
+ let st=(_indexDefault||_dedicatedDirect)?"":(params.has("city")?params.get("city"):(localStorage.getItem("mw_web_city")||""));
+ let ss=(_indexDefault||_dedicatedDirect)?dedicatedKey:(params.has("section")?params.get("section"):(localStorage.getItem("mw_web_section")||""));
  if(_indexDefault){
    localStorage.removeItem("mw_web_country");
    localStorage.removeItem("mw_web_city");
@@ -179,7 +185,7 @@ function boot(){
  let co=[...country.options].find(o=>norm(o.value)===norm(sc));if(co){country.value=co.value;refill()}else refill();
  let cio=[...city.options].find(o=>norm(o.value)===norm(st));if(cio)city.value=cio.value;
  if([...section.options].some(o=>o.value===ss))section.value=ss;
- if(keyword)keyword.value=params.has("keyword")?(params.get("keyword")||""):(_indexDefault?"":(localStorage.getItem("mw_web_keyword")||""));
+ if(keyword)keyword.value=params.has("keyword")?(params.get("keyword")||""):((_indexDefault||_dedicatedDirect)?"":(localStorage.getItem("mw_web_keyword")||""));
  document.addEventListener("maestro:cloud-updated",()=>{let oldC=country.value,oldCity=city.value;setopts(country,uniq(ALL_COUNTRIES.concat(pairs().map(x=>x.country))),"All countries");let hit=[...country.options].find(o=>norm(o.value)===norm(oldC));if(hit)country.value=hit.value;refill();let chit=[...city.options].find(o=>norm(o.value)===norm(oldCity));if(chit)city.value=chit.value;apply()});
  syncSectionChoice();
  apply();
