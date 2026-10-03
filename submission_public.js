@@ -1,5 +1,5 @@
 (()=>{
-const api=()=>String(window.MAESTRO_SUBMISSION_API||"").replace(/\/$/,"");
+const api=()=>String(window.MAESTRO_SUBMISSION_API||"https://maestro-submissions.onrender.com").replace(/\/$/,"");
 const e=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const abs=u=>{u=String(u||"");return !u?"":/^https?:\/\//i.test(u)?u:api()+u};
 async function g(p){try{let r=await fetch(api()+p,{cache:"no-store"});return r.ok?await r.json():[]}catch{return[]}}
