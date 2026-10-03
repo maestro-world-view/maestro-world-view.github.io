@@ -17,7 +17,7 @@ function listingCard(x,section,mode){
  if(mode==="listing") return `<article class="mw-listing-row mw-story mw-cloud-card" data-cloud-id="${e(x.id)}" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}"><img class="mw-feed-image mw-listing-thumb" src="${e(img)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo1.png'"><div class="mw-listing-copy">${communityMeta(x)}${mediaBadge}<h3>${e(x.title)}</h3>${extra?`<div class="mw-cloud-facts">${extra}</div>`:""}<p>${desc}</p>${contact}<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">${isVideo?(section==="music"?"PLAY MUSIC":"WATCH VIDEO"):"READ MORE"}</a></div></article>`;
  return `<article class="mw-news-row mw-story mw-cloud-card" data-cloud-id="${e(x.id)}" data-country="${e(x.country)}" data-city="${e(x.city)}" data-type="${e(section)}"><img class="mw-feed-image mw-news-thumb" src="${e(img)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo1.png'"><div class="mw-news-row-copy">${communityMeta(x)}${mediaBadge}<h3>${e(x.title)}</h3>${extra?`<div class="mw-cloud-facts">${extra}</div>`:""}<p>${desc}</p>${contact}<a class="mw-source-button" target="_blank" rel="noopener" href="${e(link)}">${isVideo?(section==="music"?"PLAY MUSIC":"WATCH VIDEO"):"READ MORE"}</a></div></article>`;
 }
-function targetFor(section){const scoped=document.querySelector(`.mw-editorial-section[data-mw-section="${CSS.escape(section)}"]`);if(scoped){let vm=scoped.querySelector(".mw-view-more-wrap");return{host:scoped,before:vm||null,mode:scoped.querySelector(".mw-listing-row")?"listing":"news"}}const market=["job","service","real_estate","vehicle","art","public_events","freelance","gaming","tech_ai","property_rental","kids_movies","movies","nature","astrology","history","product_reviews","celebrities","athletes","luxury","fashion","cuisine"].includes(section);if(market){let first=document.querySelector("article.card");if(first)return{host:first.parentElement,before:first,mode:"market"};let h=document.querySelector("header h1")?.parentElement||document.querySelector("main")||document.body;return{host:h,before:null,mode:"market"}}let latest=document.querySelector(".mw-latest");if(latest){let head=latest.querySelector(".mw-editorial-head");return{host:latest,before:head?head.nextSibling:latest.firstChild,mode:"news"}}let main=document.querySelector(".mw-section-wrap,.wrap,main")||document.body;return{host:main,before:null,mode:"news"}}
+function targetFor(section){const explicit=document.querySelector(`#submitted-community[data-mw-community-section="${CSS.escape(section)}"]`);if(explicit){let feed=explicit.nextElementSibling,first=feed&&feed.querySelector("article:not(.mw-cloud-card)");let mode=first&&first.classList.contains("mw-listing-row")?"listing":first&&first.classList.contains("mw-news-row")?"news":"market";return{host:explicit,before:null,mode:mode,scoped:true,explicit:true}}const scoped=document.querySelector(`.mw-editorial-section[data-mw-section="${CSS.escape(section)}"]`);if(scoped){let first=scoped.querySelector("article:not(.mw-cloud-card)"),vm=scoped.querySelector(".mw-view-more-wrap");return{host:scoped,before:first||vm||null,mode:scoped.querySelector(".mw-listing-row")?"listing":"news",scoped:true}}const market=["job","service","real_estate","vehicle","art","public_events","freelance","gaming","tech_ai","property_rental","kids_movies","movies","nature","astrology","history","product_reviews","celebrities","athletes","luxury","fashion","cuisine"].includes(section);if(market){let first=document.querySelector("article.card");if(first)return{host:first.parentElement,before:first,mode:"market"};let h=document.querySelector("header h1")?.parentElement||document.querySelector("main")||document.body;return{host:h,before:null,mode:"market"}}let latest=document.querySelector(".mw-latest");if(latest){let head=latest.querySelector(".mw-editorial-head");return{host:latest,before:head?head.nextSibling:latest.firstChild,mode:"news"}}let main=document.querySelector(".mw-section-wrap,.wrap,main")||document.body;return{host:main,before:null,mode:"news"}}
 function replaceCloud(section,a){
  document.querySelectorAll(`.mw-cloud-card[data-type="${CSS.escape(section)}"]`).forEach(n=>n.remove());
  let t=targetFor(section),box=document.createElement("div");
@@ -27,7 +27,9 @@ function replaceCloud(section,a){
  // community submissions before the first harvested/database story.  This
  // works with both canonical mw-news-row pages and older market/listing layouts.
  const main=document.querySelector("main")||document.body;
- const dedicated=main.querySelector('.mw-latest');
+ // V25.56 STRICT SECTION ROUTING: a homepage scoped target must never be
+ // replaced by the first article from another section.
+ const dedicated=(t.scoped||t.explicit)?null:main.querySelector('.mw-latest');
  let firstHarvested=null;
  if(dedicated){
    firstHarvested=dedicated.querySelector('article:not(.mw-cloud-card)');
@@ -36,7 +38,7 @@ function replaceCloud(section,a){
    }else{
      t={host:dedicated,before:null,mode:t.mode};
    }
- }else{
+ }else if(!t.scoped){
    firstHarvested=main.querySelector('article:not(.mw-cloud-card)');
    if(firstHarvested)t={host:firstHarvested.parentElement,before:firstHarvested,mode:t.mode};
  }
